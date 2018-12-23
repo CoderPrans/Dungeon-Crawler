@@ -17,6 +17,7 @@ body {
   width: 1020px;
   line-height: 0;
   margin: 30px auto;
+  border: 7px double #222;
 }
 
 .pos {
@@ -34,6 +35,15 @@ body {
 .visible {
   background: lightgray;
   border: 1px solid silver;
+}
+
+.dirButton {
+  margin: 3px;
+  padding: 5px 0;
+  background: #222;
+  width: 55px;
+  border: 1px ridge #888;
+  color: white;
 }
 
 @keyframes blink {

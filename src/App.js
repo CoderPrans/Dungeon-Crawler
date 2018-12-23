@@ -84,16 +84,16 @@ class App extends Component {
 
         <div className="container">{units}</div>
         <div>
-          <button id="Yplus" onClick={this.handleTravel}>
+          <button id="Yplus" className="dirButton" onClick={this.handleTravel}>
             right
           </button>
-          <button id="Xplus" onClick={this.handleTravel}>
+          <button id="Xplus" className="dirButton" onClick={this.handleTravel}>
             down
           </button>
-          <button id="Yminus" onClick={this.handleTravel}>
+          <button id="Yminus" className="dirButton" onClick={this.handleTravel}>
             left
           </button>
-          <button id="Xminus" onClick={this.handleTravel}>
+          <button id="Xminus" className="dirButton" onClick={this.handleTravel}>
             up
           </button>
         </div>
@@ -103,13 +103,14 @@ class App extends Component {
 }
 
 const Units = props => {
+  const { meX, meY, posX, posY } = props; 
   if (
-    Math.abs(props.meX - props.posX) <= 6 &&
-    Math.abs(props.meY - props.posY) <= 6
+    Math.abs(meX - posX) <= 6 &&
+    Math.abs(meY - posY) <= 6
   ) {
-    if (props.meX === props.posX && props.meY === props.posY) {
+    if (meX === posX && meY === posY) {
       return <div className="units pos" />;
-    } else if (map[props.meY].indexOf(props.meX) >= 0) {
+    } else if (map[meY].indexOf(meX) >= 0) {
       return <div className="units brick" />;
     } else {
       return <div className="units visible" />;
