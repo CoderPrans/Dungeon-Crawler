@@ -55,3 +55,25 @@ body {
     background: rgb(0, 125, 225);
   }
 }
+@keyframes blinkblack {
+  0% {
+   background: lightgray;
+ }
+
+  100% {
+    background: black;
+  }
+}
+.statsbar {
+  display: inline-text;
+  color: azure;
+}
+.statsbar span {
+  font-size: 20px;
+  margin: 10px;
+}
+.thug {
+  animation-name: blinkblack;
+  animation-duration: 0.8s;
+  animation-iteration-count: infinite;
+}

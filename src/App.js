@@ -8,7 +8,10 @@ class App extends Component {
     this.state = {
       matrix: [],
       posX: 0,
-      posY: 0
+      posY: 0,
+      health: 100,
+      xp: 25,
+      weaponLevel: 1
     };
     this.handleTravel = this.handleTravel.bind(this);
   }
@@ -81,7 +84,11 @@ class App extends Component {
     return (
       <div className="App">
         <h1 style={{ color: "white", textAlign: "center" }}>Dungeon Crawler</h1>
-
+        <div className="statsbar">
+          <span>Health: {this.state.health}</span>          
+          <span>Xp: {this.state.xp}</span>
+          <span>Weapon Level: {this.state.weaponLevel}</span>
+        </div>
         <div className="container">{units}</div>
         <div>
           <button id="Yplus" className="dirButton" onClick={this.handleTravel}>
@@ -113,8 +120,8 @@ const Units = props => {
     } else if (map[meY].indexOf(meX) >= 0) {
       return <div className="units brick" />;
     } else {
-      return <div className="units visible" />;
-    }
+       return Math.abs(20*meY - meX) % 73 === 0 && Math.abs(10*meY - meX) !== 0
+       ? <div className="units thug"></div> : <div className="units visible"></div>   }
   } else {
     return <div className="units" />;
   }
