@@ -2,16 +2,33 @@ import React, { Component } from "react";
 import "./App.css";
 import map from "./Maps";
 
-class App extends Component {
+const enemy = {
+  level1: { hp: 50, attack: 15 }, // color: purple, attack: 10
+  level2: { hp: 75, attack: 45 }, // color: brown, attack: 35
+  level3: { hp: 100, attack: 60 }, // color: blue, attack: 50
+  boss: { hp: 150, attack: 80 } // color: black, attack: 80
+};
+
+const weapon = {
+  hand: 15,
+  hammer: 45,
+  sword: 60,
+  fire: 80
+};
+
+class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
       matrix: [],
       posX: 0,
       posY: 0,
-      health: 100,
+      hp: 100,
       xp: 25,
-      weaponLevel: 1
+      weaponLevel: 1,
+      thugLevel: null,
+      thugHp: null,
+      thugAttack: null
     };
     this.handleTravel = this.handleTravel.bind(this);
   }
@@ -21,13 +38,13 @@ class App extends Component {
     this.setState({ matrix });
     document.addEventListener("keyup", e => {
       e.preventDefault();
-      if (e.keyCode === 39) {
+      if (e.keyCode == 39) {
         document.getElementById("Yplus").click();
-      } else if (e.keyCode === 40) {
+      } else if (e.keyCode == 40) {
         document.getElementById("Xplus").click();
-      } else if (e.keyCode === 37) {
+      } else if (e.keyCode == 37) {
         document.getElementById("Yminus").click();
-      } else if (e.keyCode === 38) {
+      } else if (e.keyCode == 38) {
         document.getElementById("Xminus").click();
       }
     });
@@ -35,21 +52,21 @@ class App extends Component {
 
   handleTravel(e) {
     e.preventDefault();
-    if (e.target.id === "Yplus") {
+    if (e.target.id == "Yplus") {
       if (
         this.state.posY < 59 &&
         map[this.state.posY + 1].indexOf(this.state.posX) < 0
       ) {
         this.setState({ posY: this.state.posY + 1 });
       }
-    } else if (e.target.id === "Xplus") {
+    } else if (e.target.id == "Xplus") {
       if (
         this.state.posX < 29 &&
         map[this.state.posY].indexOf(this.state.posX + 1) < 0
       ) {
         this.setState({ posX: this.state.posX + 1 });
       }
-    } else if (e.target.id === "Yminus") {
+    } else if (e.target.id == "Yminus") {
       if (
         this.state.posY > 0 &&
         map[this.state.posY - 1].indexOf(this.state.posX) < 0
@@ -82,12 +99,21 @@ class App extends Component {
       }
     }
     return (
-      <div className="App">
-        <h1 style={{ color: "white", textAlign: "center" }}>Dungeon Crawler</h1>
-        <div className="statsbar">
-          <span>Health: {this.state.health}</span>          
-          <span>Xp: {this.state.xp}</span>
-          <span>Weapon Level: {this.state.weaponLevel}</span>
+      <div>
+        <h1 style={{ color: "gainsboro", textAlign: "center" }}>
+          Dungeon Crawler
+        </h1>
+        <div className="display-section">
+          <div className="statsbar">
+            <span>Hp: {this.state.hp}</span>
+            <span>Xp: {this.state.xp}</span>
+            <span>Weapon: {this.state.weaponLevel}</span>
+          </div>
+          <div className="actionbar">
+            <span> Thug level: {this.state.thugLevel}</span>
+            <span> Thug hp: {this.state.thugHp} </span>
+            <span> Thug attack: {this.state.thugAttack} </span>
+          </div>
         </div>
         <div className="container">{units}</div>
         <div>
@@ -110,18 +136,20 @@ class App extends Component {
 }
 
 const Units = props => {
-  const { meX, meY, posX, posY } = props; 
-  if (
-    Math.abs(meX - posX) <= 6 &&
-    Math.abs(meY - posY) <= 6
-  ) {
-    if (meX === posX && meY === posY) {
+  const { meX, meY, posX, posY } = props;
+  if (Math.abs(meX - posX) <= 6 && Math.abs(meY - posY) <= 6) {
+    if (meX == posX && meY == posY) {
       return <div className="units pos" />;
     } else if (map[meY].indexOf(meX) >= 0) {
       return <div className="units brick" />;
     } else {
-       return Math.abs(20*meY - meX) % 73 === 0 && Math.abs(10*meY - meX) !== 0
-       ? <div className="units thug"></div> : <div className="units visible"></div>   }
+      return Math.abs(23 * meY - meX) % 73 == 0 &&
+        Math.abs(10 * meY - meX) != 0 ? (
+        <div className="units thug" />
+      ) : (
+        <div className="units visible" />
+      );
+    }
   } else {
     return <div className="units" />;
   }
