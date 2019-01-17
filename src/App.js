@@ -83,6 +83,17 @@ class App extends React.Component {
     }
   }
 
+  handleCombat(){
+    if(this.state.fight){
+       // simulate fight scenario
+      // detect thug level
+      // detect weapon level
+      // block passage unless the thug is defeated 
+      // decrease the hp of user (according to thug level)  and the hp of thug (according to weapon level)
+      // increase the xp of user (according to thug level)
+    } 
+  }
+
   render() {
     console.log(this.state.matrix);
     let units = [];
