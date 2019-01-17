@@ -1,4 +1,4 @@
-import React, { Component } from "react";
+import React from "react";
 import "./App.css";
 import map from "./Maps";
 
@@ -38,13 +38,13 @@ class App extends React.Component {
     this.setState({ matrix });
     document.addEventListener("keyup", e => {
       e.preventDefault();
-      if (e.keyCode == 39) {
+      if (e.keyCode === 39) {
         document.getElementById("Yplus").click();
-      } else if (e.keyCode == 40) {
+      } else if (e.keyCode === 40) {
         document.getElementById("Xplus").click();
-      } else if (e.keyCode == 37) {
+      } else if (e.keyCode === 37) {
         document.getElementById("Yminus").click();
-      } else if (e.keyCode == 38) {
+      } else if (e.keyCode === 38) {
         document.getElementById("Xminus").click();
       }
     });
@@ -52,21 +52,21 @@ class App extends React.Component {
 
   handleTravel(e) {
     e.preventDefault();
-    if (e.target.id == "Yplus") {
+    if (e.target.id === "Yplus") {
       if (
         this.state.posY < 59 &&
         map[this.state.posY + 1].indexOf(this.state.posX) < 0
       ) {
         this.setState({ posY: this.state.posY + 1 });
       }
-    } else if (e.target.id == "Xplus") {
+    } else if (e.target.id === "Xplus") {
       if (
         this.state.posX < 29 &&
         map[this.state.posY].indexOf(this.state.posX + 1) < 0
       ) {
         this.setState({ posX: this.state.posX + 1 });
       }
-    } else if (e.target.id == "Yminus") {
+    } else if (e.target.id === "Yminus") {
       if (
         this.state.posY > 0 &&
         map[this.state.posY - 1].indexOf(this.state.posX) < 0
@@ -138,13 +138,13 @@ class App extends React.Component {
 const Units = props => {
   const { meX, meY, posX, posY } = props;
   if (Math.abs(meX - posX) <= 6 && Math.abs(meY - posY) <= 6) {
-    if (meX == posX && meY == posY) {
+    if (meX === posX && meY === posY) {
       return <div className="units pos" />;
     } else if (map[meY].indexOf(meX) >= 0) {
       return <div className="units brick" />;
     } else {
-      return Math.abs(23 * meY - meX) % 73 == 0 &&
-        Math.abs(10 * meY - meX) != 0 ? (
+      return Math.abs(23 * meY - meX) % 73 === 0 &&
+        Math.abs(10 * meY - meX) !== 0 ? (
         <div className="units thug" />
       ) : (
         <div className="units visible" />
