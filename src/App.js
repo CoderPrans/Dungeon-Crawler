@@ -16,6 +16,19 @@ const weapon = {
   fire: 80
 };
 
+let positions = new Array(60);
+
+for(let i = 0; i < positions.length; i++){
+   positions[i] = new Array(30);
+  for(let j = 0; j < positions[i].length; j++){
+    if(Math.random() < 0.01){
+      positions[i][j] = 1;
+    }
+  }
+}
+
+console.log(positions);
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -154,7 +167,7 @@ const Units = props => {
     } else if (map[meY].indexOf(meX) >= 0) {
       return <div className="units brick" />;
     } else {
-      return Math.abs(23 * meY - meX) % 73 === 0 &&
+      return positions[meY][meX] >= 0 &&
         Math.abs(10 * meY - meX) !== 0 ? (
         <div className="units thug" />
       ) : (
