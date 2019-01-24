@@ -2,19 +2,19 @@ import React from "react";
 import "./App.css";
 import map from "./Maps";
 
-const enemy = {
-  level1: { hp: 50, attack: 15 }, // color: purple, attack: 10
-  level2: { hp: 75, attack: 45 }, // color: brown, attack: 35
-  level3: { hp: 100, attack: 60 }, // color: blue, attack: 50
-  boss: { hp: 150, attack: 80 } // color: black, attack: 80
-};
+const enemy = [
+  { hp: 50, attack: 15 }, // color: purple, attack: 10
+  { hp: 75, attack: 45 }, // color: brown, attack: 35
+  { hp: 100, attack: 60 }, // color: blue, attack: 50
+  { hp: 150, attack: 80 } // color: black, attack: 80
+];
 
-const weapon = {
+/* const weapon = {
   hand: 15,
   hammer: 45,
   sword: 60,
   fire: 80
-};
+}; */
 
 let positions = new Array(60);
 
@@ -29,26 +29,29 @@ for(let i = 0; i < positions.length; i++){
 
 console.log(positions);
 
+console.log(map);
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      matrix: [],
       posX: 0,
       posY: 0,
       hp: 100,
       xp: 25,
+      enemyDir: null,
       weaponLevel: 1,
-      thugLevel: null,
-      thugHp: null,
-      thugAttack: null
+      enemyLevel: null,
+      enemyHp: null,
+      enemyAttack: null,
+      fightOn: false
     };
     this.handleTravel = this.handleTravel.bind(this);
+    this.detectEnemy = this.detectEnemy.bind(this);
   }
 
   componentDidMount() {
-    let matrix = Array(30).fill(Array(60).fill(1));
-    this.setState({ matrix });
+    // let matrix = Array(30).fill(Array(60).fill(1));
+    // this.setState({ matrix });
     document.addEventListener("keyup", e => {
       e.preventDefault();
       if (e.keyCode === 39) {
@@ -62,34 +65,85 @@ class App extends React.Component {
       }
     });
   }
+ 
+ detectEnemy(){
+    
+    let {posY, posX} = this.state
+   if(posY && posX && Math.abs(posX - 1) && Math.abs(posY - 1)){
+      // let enemyDir;
+      // let enemyLevel;
+    if(positions[posY + 1][posX] === 1){
+      console.log("this was executed", positions[posY + 1][posX])
+       //enemyDir = "right"
+      //enemyLevel = positions[this.state.posY + 1][this.state.posX]
+      this.setState({fightOn: true})
+    } else if(positions[posY][posX + 1] === 1){
+      console.log("this was executed", "down")
+
+      //enemyDir = "down"
+      //enemyLevel = positions[this.state.posY][this.state.posX + 1]
+      this.setState({fightOn: true})
+    } else if(positions[posY - 1][posX] === 1){
+console.log("this was executed", "left")
+
+      //enemyDir = "left"
+      //enemyLevel = positions[this.state.posY -1][this.state.posX] this.setState({fightOn: true})
+    } else if(positions[posY][posX - 1] === 1){
+ console.log("this was executed", "up")
+     //enemyDir = "up"
+      //enemyLevel = positions[this.state.posY][this.state.posX - 1]
+      this.setState({fightOn: true})
+    }
+    
+    
+   console.log("from inside the didUpdate", this.state)
+      
+    }
+  
+  }
+  
+  componentDidUpdate(prevProps, prevState){
+    if(prevState.posX !== this.state.posX && prevState.posY !== this.state.posY){
+      this.detectEnemy()
+      console.log("inside state check");
+    }
+    console.log(this.state.fightOn ? "fight!!!!!!!!!!!!" : "dont fight")
+  }
+
 
   handleTravel(e) {
     e.preventDefault();
+   
+   
     if (e.target.id === "Yplus") {
       if (
         this.state.posY < 59 &&
-        map[this.state.posY + 1].indexOf(this.state.posX) < 0
+        map[this.state.posY + 1].indexOf(this.state.posX) < 0 &&
+        positions[this.state.posY + 1][this.state.posX] !== 1
       ) {
         this.setState({ posY: this.state.posY + 1 });
       }
     } else if (e.target.id === "Xplus") {
       if (
         this.state.posX < 29 &&
-        map[this.state.posY].indexOf(this.state.posX + 1) < 0
+        map[this.state.posY].indexOf(this.state.posX + 1) < 0 &&
+        positions[this.state.posY][this.state.posX + 1] !== 1
       ) {
         this.setState({ posX: this.state.posX + 1 });
       }
     } else if (e.target.id === "Yminus") {
       if (
         this.state.posY > 0 &&
-        map[this.state.posY - 1].indexOf(this.state.posX) < 0
+        map[this.state.posY - 1].indexOf(this.state.posX) < 0 &&
+        positions[this.state.posY - 1][this.state.posX] !== 1
       ) {
         this.setState({ posY: this.state.posY - 1 });
       }
     } else {
       if (
         this.state.posX > 0 &&
-        map[this.state.posY].indexOf(this.state.posX - 1) < 0
+        map[this.state.posY].indexOf(this.state.posX - 1) < 0 &&
+        positions[this.state.posY][this.state.posX - 1] !== 1
       ) {
         this.setState({ posX: this.state.posX - 1 });
       }
@@ -108,7 +162,7 @@ class App extends React.Component {
   }
 
   render() {
-    console.log(this.state.matrix);
+ 
     let units = [];
     for (let i = 0; i < 30; i++) {
       for (let j = 0; j < 60; j++) {
@@ -134,9 +188,9 @@ class App extends React.Component {
             <span>Weapon: {this.state.weaponLevel}</span>
           </div>
           <div className="actionbar">
-            <span> Thug level: {this.state.thugLevel}</span>
-            <span> Thug hp: {this.state.thugHp} </span>
-            <span> Thug attack: {this.state.thugAttack} </span>
+            <span> Thug level: {this.state.enemyLevel}</span>
+            <span> Thug hp: {this.state.enemyHp} </span>
+            <span> Thug attack: {this.state.enemyAttack} </span>
           </div>
         </div>
         <div className="container">{units}</div>
