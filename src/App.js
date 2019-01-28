@@ -2,12 +2,13 @@ import React from "react";
 import "./App.css";
 import map from "./Maps";
 
-const enemy = [
+/*const enemy = [
   { hp: 50, attack: 15 }, // color: purple, attack: 10
   { hp: 75, attack: 45 }, // color: brown, attack: 35
   { hp: 100, attack: 60 }, // color: blue, attack: 50
   { hp: 150, attack: 80 } // color: black, attack: 80
 ];
+*/
 
 /* const weapon = {
   hand: 15,
@@ -50,8 +51,7 @@ class App extends React.Component {
   }
 
   componentDidMount() {
-    // let matrix = Array(30).fill(Array(60).fill(1));
-    // this.setState({ matrix });
+ 
     document.addEventListener("keyup", e => {
       e.preventDefault();
       if (e.keyCode === 39) {
