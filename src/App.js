@@ -68,7 +68,7 @@ class App extends React.Component {
  
  detectEnemy(nextY, nextX){
     
-   if(nextY && nextX && Math.abs(nextX - 1) && Math.abs(nextY - 1)){
+   if(nextY && nextX && Math.abs(nextX - 1) && Math.abs(nextY - 1) && nextY + 1 < 59 && nextX + 1 < 29){
       // let enemyDir;
       // let enemyLevel;
     if(positions[nextY + 1][nextX] === 1){
@@ -128,10 +128,12 @@ class App extends React.Component {
         map[posY + 1].indexOf(posX) < 0 &&
         positions[posY + 1][posX] !== 1
       ) {
-        if(typeof this.detectEnemy(posY + 1, posX) === 'object'){
+        if(this.detectEnemy(posY + 1, posX) === 'object'){
           let {enemyDir, enemyLevel} = this.detectEnemy(posY + 1, posX)
           this.setState({ enemyDir, enemyLevel })
-        } 
+        } else {
+          this.setState({fightOn: false})
+        }
         this.setState({ posY: posY + 1 });
       }
     } else if (e.target.id === "Xplus") {
@@ -143,7 +145,10 @@ class App extends React.Component {
         if(typeof this.detectEnemy(posY, posX + 1) === 'object'){
           let {enemyDir, enemyLevel} = this.detectEnemy(posY, posX + 1)
           this.setState({ enemyDir, enemyLevel })
-        }  
+        } else {
+          this.setState({fightOn: false})
+        }
+ 
         this.setState({ posX: posX + 1 });
       }
     } else if (e.target.id === "Yminus") {
@@ -155,7 +160,10 @@ class App extends React.Component {
          if(typeof this.detectEnemy(posY - 1, posX) === 'object'){
           let {enemyDir, enemyLevel} = this.detectEnemy(posY - 1, posX)
           this.setState({ enemyDir, enemyLevel })
-        } 
+        } else {
+          this.setState({fightOn: false})
+        }
+
         this.setState({ posY: posY - 1 });
       }
     } else {
@@ -167,7 +175,10 @@ class App extends React.Component {
          if(typeof this.detectEnemy(posY, posX - 1) === 'object'){
           let {enemyDir, enemyLevel} = this.detectEnemy(posY, posX - 1)
           this.setState({ enemyDir, enemyLevel })
-        }   
+        } else {
+          this.setState({fightOn: false})
+        }
+  
         this.setState({ posX: posX - 1 });
       }
     }
