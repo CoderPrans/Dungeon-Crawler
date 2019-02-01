@@ -66,89 +66,113 @@ class App extends React.Component {
     });
   }
  
- detectEnemy(){
+ detectEnemy(nextY, nextX){
     
-    let {posY, posX} = this.state
-   if(posY && posX && Math.abs(posX - 1) && Math.abs(posY - 1)){
+   if(nextY && nextX && Math.abs(nextX - 1) && Math.abs(nextY - 1)){
       // let enemyDir;
       // let enemyLevel;
-    if(positions[posY + 1][posX] === 1){
-      console.log("this was executed", positions[posY + 1][posX])
+    if(positions[nextY + 1][nextX] === 1){
+      alert('Enemy detected!, right');
+      console.log("enemy detected", positions[nextY + 1][nextX])
+      this.setState({fightOn: true})
+      return {enemyDir: "right", enemyLevel: 1}
        //enemyDir = "right"
       //enemyLevel = positions[this.state.posY + 1][this.state.posX]
+      } else if(positions[nextY][nextX + 1] === 1){
+      alert('Enemy detected!, down');
+      console.log("enemy detected", "down")
       this.setState({fightOn: true})
-    } else if(positions[posY][posX + 1] === 1){
-      console.log("this was executed", "down")
-
+      return {enmeyDir: "down", enemyLevel: 1}
       //enemyDir = "down"
       //enemyLevel = positions[this.state.posY][this.state.posX + 1]
+     
+    } else if(positions[nextY - 1][nextX] === 1){
+      alert('Enemy detected!, left');
+      console.log("enemy detected", "left")
       this.setState({fightOn: true})
-    } else if(positions[posY - 1][posX] === 1){
-console.log("this was executed", "left")
-
+      return {enemyDir: "left", enemyLevel: 1}
       //enemyDir = "left"
       //enemyLevel = positions[this.state.posY -1][this.state.posX] this.setState({fightOn: true})
-    } else if(positions[posY][posX - 1] === 1){
- console.log("this was executed", "up")
+    } else if(positions[nextY][nextX - 1] === 1){
+      alert('Enemy detected!, up');
+      console.log("enemy detected", "up")
+      this.setState({fightOn: true})
+      return {enemyDir: "up", enemyLevel: 1}
      //enemyDir = "up"
       //enemyLevel = positions[this.state.posY][this.state.posX - 1]
-      this.setState({fightOn: true})
     }
     
-    
-   console.log("from inside the didUpdate", this.state)
-      
+   console.log("from inside the detectEnemy", this.state.fightOn)
+   return "clear"    
     }
   
   }
-  
-  componentDidUpdate(prevProps, prevState){
-    if(prevState.posX !== this.state.posX && prevState.posY !== this.state.posY){
+
+  /*componentDidUpdate(prevProps, prevState){
+    console.log(this.state.posX, prevState.posX);
+    if(this.state.posX !== prevState.posX && this.state.posY !== prevState.posY){
       this.detectEnemy()
       console.log("inside state check");
     }
     console.log(this.state.fightOn ? "fight!!!!!!!!!!!!" : "dont fight")
-  }
+  }*/
 
 
   handleTravel(e) {
     e.preventDefault();
    
-   
+  let {posX, posY} = this.state; 
     if (e.target.id === "Yplus") {
       if (
-        this.state.posY < 59 &&
-        map[this.state.posY + 1].indexOf(this.state.posX) < 0 &&
-        positions[this.state.posY + 1][this.state.posX] !== 1
+        posY < 59 &&
+        map[posY + 1].indexOf(posX) < 0 &&
+        positions[posY + 1][posX] !== 1
       ) {
-        this.setState({ posY: this.state.posY + 1 });
+        if(typeof this.detectEnemy(posY + 1, posX) === 'object'){
+          let {enemyDir, enemyLevel} = this.detectEnemy(posY + 1, posX)
+          this.setState({ enemyDir, enemyLevel })
+        } 
+        this.setState({ posY: posY + 1 });
       }
     } else if (e.target.id === "Xplus") {
       if (
-        this.state.posX < 29 &&
-        map[this.state.posY].indexOf(this.state.posX + 1) < 0 &&
-        positions[this.state.posY][this.state.posX + 1] !== 1
+        posX < 29 &&
+        map[posY].indexOf(posX + 1) < 0 &&
+        positions[posY][posX + 1] !== 1
       ) {
-        this.setState({ posX: this.state.posX + 1 });
+        if(typeof this.detectEnemy(posY, posX + 1) === 'object'){
+          let {enemyDir, enemyLevel} = this.detectEnemy(posY, posX + 1)
+          this.setState({ enemyDir, enemyLevel })
+        }  
+        this.setState({ posX: posX + 1 });
       }
     } else if (e.target.id === "Yminus") {
       if (
-        this.state.posY > 0 &&
-        map[this.state.posY - 1].indexOf(this.state.posX) < 0 &&
-        positions[this.state.posY - 1][this.state.posX] !== 1
+        posY > 0 &&
+        map[posY - 1].indexOf(posX) < 0 &&
+        positions[posY - 1][posX] !== 1
       ) {
-        this.setState({ posY: this.state.posY - 1 });
+         if(typeof this.detectEnemy(posY - 1, posX) === 'object'){
+          let {enemyDir, enemyLevel} = this.detectEnemy(posY - 1, posX)
+          this.setState({ enemyDir, enemyLevel })
+        } 
+        this.setState({ posY: posY - 1 });
       }
     } else {
       if (
-        this.state.posX > 0 &&
-        map[this.state.posY].indexOf(this.state.posX - 1) < 0 &&
-        positions[this.state.posY][this.state.posX - 1] !== 1
+        posX > 0 &&
+        map[posY].indexOf(posX - 1) < 0 &&
+        positions[posY][posX - 1] !== 1
       ) {
-        this.setState({ posX: this.state.posX - 1 });
+         if(typeof this.detectEnemy(posY, posX - 1) === 'object'){
+          let {enemyDir, enemyLevel} = this.detectEnemy(posY, posX - 1)
+          this.setState({ enemyDir, enemyLevel })
+        }   
+        this.setState({ posX: posX - 1 });
       }
     }
   }
+       
 
   handleCombat(){
     if(this.state.fight){
