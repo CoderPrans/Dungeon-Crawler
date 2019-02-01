@@ -4,19 +4,19 @@ self.__precacheManifest = [
     "url": "/Dungeon-Crawler/static/js/runtime~main.d01edacb.js"
   },
   {
-    "revision": "d9e1ec6390d2d4a84658",
-    "url": "/Dungeon-Crawler/static/js/main.d9e1ec63.chunk.js"
+    "revision": "e60908111d018f2474aa",
+    "url": "/Dungeon-Crawler/static/js/main.e6090811.chunk.js"
   },
   {
     "revision": "f715b2e0bea123466b14",
     "url": "/Dungeon-Crawler/static/js/1.f715b2e0.chunk.js"
   },
   {
-    "revision": "d9e1ec6390d2d4a84658",
+    "revision": "e60908111d018f2474aa",
     "url": "/Dungeon-Crawler/static/css/main.c6d2ffae.chunk.css"
   },
   {
-    "revision": "34fdfc0563597df9685c20f04199763e",
+    "revision": "c72dbb45b48f88414335a05a4746e864",
     "url": "/Dungeon-Crawler/index.html"
   }
 ];
