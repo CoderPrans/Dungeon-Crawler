@@ -21,7 +21,6 @@ body {
 }
 
 .pos {
-  background: rgb(0, 125, 225);
   animation-name: blink;
   animation-duration: 0.4s;
   animation-iteration-count: infinite;
