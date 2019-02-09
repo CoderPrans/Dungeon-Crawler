@@ -10,13 +10,13 @@ const enemy = [
 ];
 
 
-const weapon = [
+/*const weapon = [
   ["hand",  15],
   ["hammer", 45],
   ["sword", 60],
   ["fire", 80]
 ]; 
-
+*/
 let positions = new Array(60);
 
 for(let i = 0; i < positions.length; i++){
@@ -40,6 +40,8 @@ class App extends React.Component {
       hp: 100,
       xp: 25,
       enemyDir: null,
+      enemyHp: null,
+      enemyAttack: null,
       weaponLevel: 1,
       enemyLevel: null,
       fightOn: false
@@ -50,16 +52,21 @@ class App extends React.Component {
 
   componentDidMount() {
  
+    /*let {hp, xp, enemyLevel, weaponLevel, enemyDir} = this.state, 
+      enemyHp = enemyLevel ? enemy[enemyLevel].hp : "", enemyAttack = enemyLevel ? enemy[enemyLevel].attack : "",
+      //weaponName = weapon[weaponLevel][0],
+      weaponAttack = weapon[weaponLevel][1]
+      */
     document.addEventListener("keyup", e => {
       e.preventDefault();
       if (e.keyCode === 39) {
-        document.getElementById("Yplus").click();
+        document.getElementById("Yplus").click(); 
       } else if (e.keyCode === 40) {
-        document.getElementById("Xplus").click();
+        document.getElementById("Xplus").click(); 
       } else if (e.keyCode === 37) {
-        document.getElementById("Yminus").click();
+        document.getElementById("Yminus").click(); 
       } else if (e.keyCode === 38) {
-        document.getElementById("Xminus").click();
+        document.getElementById("Xminus").click(); 
       }
     });
   }
@@ -69,30 +76,23 @@ class App extends React.Component {
    if(nextY && nextX && Math.abs(nextX - 1) && Math.abs(nextY - 1) && nextY + 1 < 59 && nextX + 1 < 29){
     if(positions[nextY + 1][nextX] === 1){
       alert('Enemy detected!, right');
-      console.log("enemy detected", positions[nextY + 1][nextX])
       this.setState({fightOn: true})
-      return {enemyDir: "right", enemyLevel: 1}
-      } else if(positions[nextY][nextX + 1] === 1){
+      return {enemyDir: "right", enemyLevel: 1, enemyHp: enemy[1].hp, enemyAttack: enemy[1].attack}
+    } else if(positions[nextY][nextX + 1] === 1){
       alert('Enemy detected!, down');
-      console.log("enemy detected", "down")
       this.setState({fightOn: true})
-      return {enmeyDir: "down", enemyLevel: 1}
+      return {enemyDir: "down", enemyLevel: 1, enemyHp: enemy[1].hp, enemyAttack: enemy[1].attack}
     } else if(positions[nextY - 1][nextX] === 1){
       alert('Enemy detected!, left');
-      console.log("enemy detected", "left")
       this.setState({fightOn: true})
-      return {enemyDir: "left", enemyLevel: 1}
+      return {enemyDir: "left", enemyLevel: 1, enemyHp: enemy[1].hp, enemyAttack: enemy[1].attack}
     } else if(positions[nextY][nextX - 1] === 1){
       alert('Enemy detected!, up');
-      console.log("enemy detected", "up")
       this.setState({fightOn: true})
-      return {enemyDir: "up", enemyLevel: 1}
-    }
-    
-   console.log("from inside the detectEnemy", this.state.fightOn)
-   return "clear"    
-    }
-  
+      return {enemyDir: "up", enemyLevel: 1, enemyHp: enemy[1].hp, enemyAttack: enemy[1].attack}
+    } console.log("from inside the detectEnemy", this.state.fightOn)
+     return "clear" 
+   } 
   }
 
   handleTravel(e) {
@@ -103,16 +103,16 @@ class App extends React.Component {
       if (
         posY < 59 &&
         map[posY + 1].indexOf(posX) < 0 &&
-        positions[posY + 1][posX] !== 1
+        positions[posY + 1][posX] !== 1 
       ) {
         if(typeof this.detectEnemy(posY + 1, posX) === 'object'){
-          let {enemyDir, enemyLevel} = this.detectEnemy(posY + 1, posX)
-          this.setState({ enemyDir, enemyLevel })
+          let {enemyDir, enemyLevel, enemyAttack, enemyHp} = this.detectEnemy(posY + 1, posX)
+          this.setState({ enemyDir, enemyLevel, enemyAttack, enemyHp})
         } else {
           this.setState({fightOn: false})
         }
         this.setState({ posY: posY + 1 });
-      }
+      } 
     } else if (e.target.id === "Xplus") {
       if (
         posX < 29 &&
@@ -120,8 +120,8 @@ class App extends React.Component {
         positions[posY][posX + 1] !== 1
       ) {
         if(typeof this.detectEnemy(posY, posX + 1) === 'object'){
-          let {enemyDir, enemyLevel} = this.detectEnemy(posY, posX + 1)
-          this.setState({ enemyDir, enemyLevel })
+          let {enemyDir, enemyLevel, enemyAttack, enemyHp} = this.detectEnemy(posY, posX + 1)
+          this.setState({ enemyDir, enemyLevel, enemyAttack, enemyHp })
         } else {
           this.setState({fightOn: false})
         }
@@ -135,8 +135,8 @@ class App extends React.Component {
         positions[posY - 1][posX] !== 1
       ) {
          if(typeof this.detectEnemy(posY - 1, posX) === 'object'){
-          let {enemyDir, enemyLevel} = this.detectEnemy(posY - 1, posX)
-          this.setState({ enemyDir, enemyLevel })
+          let {enemyDir, enemyLevel, enemyAttack, enemyHp} = this.detectEnemy(posY - 1, posX)
+          this.setState({ enemyDir, enemyLevel, enemyAttack, enemyHp })
         } else {
           this.setState({fightOn: false})
         }
@@ -150,8 +150,8 @@ class App extends React.Component {
         positions[posY][posX - 1] !== 1
       ) {
          if(typeof this.detectEnemy(posY, posX - 1) === 'object'){
-          let {enemyDir, enemyLevel} = this.detectEnemy(posY, posX - 1)
-          this.setState({ enemyDir, enemyLevel })
+          let {enemyDir, enemyLevel, enemyAttack, enemyHp} = this.detectEnemy(posY, posX - 1)
+          this.setState({ enemyDir, enemyLevel, enemyAttack, enemyHp })
         } else {
           this.setState({fightOn: false})
         }
@@ -161,25 +161,14 @@ class App extends React.Component {
     }
   }
        
-
   handleCombat(){
-    if(this.state.fightOn){
-       // simulate fight scenario
-      // detect thug level
-      // detect weapon level
-      // block passage unless the thug is defeated 
-      // decrease the hp of user (according to thug level)  and the hp of thug (according to weapon level)
-      // increase the xp of user (according to thug level)
-   /* let {hp, xp, enemyLevel, weaponLevel, enemyDir} = this.state, 
-          enemyHp = enemy[enemyLevel].hp,
-          enemyAttack = enemy[enemyLevel].attack,
-          weaponName = weapon[weaponLevel][0],
-          weaponLevel = weapon[weaponLevel][1]
-  */
-    } 
+    // if keypress and keypressed dir === enemyDir 
+    // FIGHT !!!
+    // else return "nothing to fight for.. "
   }
 
-  render() {
+render() {
+  console.log(this.state.enemyDir);
  
     let units = [];
     for (let i = 0; i < 30; i++) {
@@ -206,9 +195,9 @@ class App extends React.Component {
             <span>Weapon: {this.state.weaponLevel}</span>
           </div>
           <div className="actionbar">
-            <span> Thug level: {this.state.enemyLevel}</span>
-            <span> Thug hp: {this.state.enemyHp} </span>
-            <span> Thug attack: {this.state.enemyAttack} </span>
+            <span> E level: {this.state.enemyLevel}</span>
+            <span> E hp: {this.state.enemyHp} </span>
+            <span> E attack: {this.state.enemyAttack} </span>
           </div>
         </div>
         <div className="container">{units}</div>
