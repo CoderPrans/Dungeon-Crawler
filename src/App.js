@@ -9,20 +9,21 @@ const enemy = [
   { hp: 150, attack: 80 } // color: black, attack: 80
 ];
 
-
-/*const weapon = [
+const weapon = [
   ["hand",  15],
   ["hammer", 45],
   ["sword", 60],
   ["fire", 80]
 ]; 
-*/
-let positions = new Array(60);
+
+// defines the position of enemy. choses a random position each time.
+// TODO erase enemy when enemyHP == 0
+let positions = new Array(60)
 
 for(let i = 0; i < positions.length; i++){
-   positions[i] = new Array(30);
+   positions[i] = new Array(30).fill(0);
   for(let j = 0; j < positions[i].length; j++){
-    if(Math.random() < 0.01){
+    if(Math.random() < 0.01 && map[i].indexOf(j) === -1){
       positions[i][j] = 1;
     }
   }
@@ -31,6 +32,7 @@ for(let i = 0; i < positions.length; i++){
 console.log(positions);
 
 console.log(map);
+
 class App extends React.Component {
   constructor(props) {
     super(props);
@@ -39,6 +41,7 @@ class App extends React.Component {
       posY: 0,
       hp: 100,
       xp: 25,
+      positions,
       enemyDir: null,
       enemyHp: null,
       enemyAttack: null,
@@ -48,17 +51,12 @@ class App extends React.Component {
     };
     this.handleTravel = this.handleTravel.bind(this);
     this.detectEnemy = this.detectEnemy.bind(this);
+    this.handleCombat = this.handleCombat.bind(this);
   }
 
   componentDidMount() {
  
-    /*let {hp, xp, enemyLevel, weaponLevel, enemyDir} = this.state, 
-      enemyHp = enemyLevel ? enemy[enemyLevel].hp : "", enemyAttack = enemyLevel ? enemy[enemyLevel].attack : "",
-      //weaponName = weapon[weaponLevel][0],
-      weaponAttack = weapon[weaponLevel][1]
-      */
-    document.addEventListener("keyup", e => {
-      e.preventDefault();
+    document.addEventListener("keyup", e => { e.preventDefault();
       if (e.keyCode === 39) {
         document.getElementById("Yplus").click(); 
       } else if (e.keyCode === 40) {
@@ -69,9 +67,12 @@ class App extends React.Component {
         document.getElementById("Xminus").click(); 
       }
     });
+    this.setState({ positions })
   }
  
  detectEnemy(nextY, nextX){
+
+   let { positions } = this.state
     
    if(nextY && nextX && Math.abs(nextX - 1) && Math.abs(nextY - 1) && nextY + 1 < 59 && nextX + 1 < 29){
     if(positions[nextY + 1][nextX] === 1){
@@ -95,10 +96,13 @@ class App extends React.Component {
    } 
   }
 
-  handleTravel(e) {
+handleTravel(e) {
     e.preventDefault();
-   
-  let {posX, posY} = this.state; 
+
+   let { positions } = this.state 
+
+ if(this.state.enemyDir === null){
+    let {posX, posY} = this.state; 
     if (e.target.id === "Yplus") {
       if (
         posY < 59 &&
@@ -159,30 +163,73 @@ class App extends React.Component {
         this.setState({ posX: posX - 1 });
       }
     }
-  }
+ } else {
+  this.handleCombat(e) 
+ }   
+}
        
-  handleCombat(){
-    // if keypress and keypressed dir === enemyDir 
-    // FIGHT !!!
-    // else return "nothing to fight for.. "
-  }
+handleCombat(e){
+  let {hp, xp, enemyLevel, weaponLevel, enemyDir, enemyHp, enemyAttack} = this.state, 
+    //weaponName = weapon[weaponLevel][0],
+      weaponAttack = weapon[weaponLevel][1]
+       
+    if(enemyDir === "right" && e.target.id === "Yplus"){
+      enemyHp = enemyHp - weaponAttack >=0 ? enemyHp - weaponAttack : 0 
+      hp = hp - enemyAttack >= 0 ? hp - enemyAttack : 0 
+      xp += 5*enemyLevel 
+      if(enemyHp === 0){
+
+        // positions - the thug obliterated
+        // enemy coords are posX, posY + 1 
+        // positions[posY+1][posX] = 0
+        // this.setState({ positions : positions[posY+1][posX] = 0})
+        console.log(this.state.positions.slice())
+        this.setState({
+          enemyDir : null,
+          enemyHp: null,
+          enemyAttack: null,
+          enemyLevel: null})}
+      else{ this.setState({enemyHp, hp, xp}) }
+    } else if(enemyDir === "left" && e.target.id === "Yminus"){
+      enemyHp = enemyHp - weaponAttack >= 0 ? enemyHp - weaponAttack : 0 
+      hp = hp - enemyAttack >= 0 ? hp - enemyAttack : 0
+      xp += 5*enemyLevel 
+      this.setState({enemyHp, hp, xp})
+    } else if(enemyDir === "up" && e.target.id === "Xminus"){
+      enemyHp = enemyHp - weaponAttack >=0 ? enemyHp - weaponAttack : 0 
+      hp = hp - enemyAttack >= 0 ? hp - enemyAttack : 0
+      xp += 5*enemyLevel 
+      this.setState({enemyHp, hp, xp})
+    } else if(enemyDir === "down" && e.target.id === "Xplus"){
+      enemyHp = enemyHp - weaponAttack >=0 ? enemyHp - weaponAttack : 0 
+      hp = hp - enemyAttack >= 0 ? hp - enemyAttack : 0
+      xp += 5*enemyLevel 
+      this.setState({enemyHp, hp, xp}) 
+    }
+}
+
+// when fight is won..
+// erase enemy from positions arr
+// reset enemy states to null
 
 render() {
-  console.log(this.state.enemyDir);
- 
+  console.log(this.state.enemyDir, this.state.enemyDir ? this.state.enemyHp : "");
+  let { posX, posY, positions } = this.state 
     let units = [];
     for (let i = 0; i < 30; i++) {
       for (let j = 0; j < 60; j++) {
+        let thugPresence = positions[j][i]
         units.push(
           <Units
             meX={i}
             meY={j}
-            posX={this.state.posX}
-            posY={this.state.posY}
+            posX={posX}
+            posY={posY}
+            thugP={thugPresence}
           />
         );
       }
-    }
+   }
     return (
       <div>
         <h1 style={{ color: "gainsboro", textAlign: "center" }}>
@@ -221,14 +268,15 @@ render() {
 }
 
 const Units = props => {
-  const { meX, meY, posX, posY } = props;
+  const { meX, meY, posX, posY, thugP } = props;
   if (Math.abs(meX - posX) <= 6 && Math.abs(meY - posY) <= 6) {
     if (meX === posX && meY === posY) {
       return <div className="units pos" />;
     } else if (map[meY].indexOf(meX) >= 0) {
       return <div className="units brick" />;
     } else {
-      return positions[meY][meX] >= 0 &&
+      console.log(thugP)
+      return thugP &&
         Math.abs(10 * meY - meX) !== 0 ? (
         <div className="units thug" />
       ) : (
