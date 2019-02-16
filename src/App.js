@@ -169,7 +169,7 @@ handleTravel(e) {
 }
        
 handleCombat(e){
-  let {hp, xp, enemyLevel, weaponLevel, enemyDir, enemyHp, enemyAttack} = this.state, 
+  let {hp, xp, enemyLevel, weaponLevel, enemyDir, enemyHp, enemyAttack, posY, posX} = this.state, 
     //weaponName = weapon[weaponLevel][0],
       weaponAttack = weapon[weaponLevel][1]
        
@@ -178,12 +178,10 @@ handleCombat(e){
       hp = hp - enemyAttack >= 0 ? hp - enemyAttack : 0 
       xp += 5*enemyLevel 
       if(enemyHp === 0){
-
         // positions - the thug obliterated
-        // enemy coords are posX, posY + 1 
-        // positions[posY+1][posX] = 0
-        // this.setState({ positions : positions[posY+1][posX] = 0})
-        console.log(this.state.positions.slice())
+        let clonedArr = this.state.positions.slice(0) 
+        clonedArr[posY+1][posX] = 0
+        this.setState({ positions: clonedArr })
         this.setState({
           enemyDir : null,
           enemyHp: null,
@@ -213,7 +211,7 @@ handleCombat(e){
 // reset enemy states to null
 
 render() {
-  console.log(this.state.enemyDir, this.state.enemyDir ? this.state.enemyHp : "");
+  //  console.log(this.state.enemyDir, this.state.enemyDir ? this.state.enemyHp : "");
   let { posX, posY, positions } = this.state 
     let units = [];
     for (let i = 0; i < 30; i++) {
@@ -275,7 +273,7 @@ const Units = props => {
     } else if (map[meY].indexOf(meX) >= 0) {
       return <div className="units brick" />;
     } else {
-      console.log(thugP)
+      //console.log(thugP)
       return thugP &&
         Math.abs(10 * meY - meX) !== 0 ? (
         <div className="units thug" />
