@@ -16,8 +16,9 @@ const weapon = [
   ["fire", 80]
 ]; 
 
+// TODO health potions
+
 // defines the position of enemy. choses a random position each time.
-// TODO erase enemy when enemyHP == 0
 let positions = new Array(60)
 
 for(let i = 0; i < positions.length; i++){
@@ -74,7 +75,7 @@ class App extends React.Component {
 
    let { positions } = this.state
     
-   if(nextY && nextX && Math.abs(nextX - 1) && Math.abs(nextY - 1) && nextY + 1 < 59 && nextX + 1 < 29){
+   if(nextY && nextX && nextY + 1 < 59 && nextX + 1 < 29){
     if(positions[nextY + 1][nextX] === 1){
       alert('Enemy detected!, right');
       this.setState({fightOn: true})
@@ -98,6 +99,7 @@ class App extends React.Component {
 
 handleTravel(e) {
     e.preventDefault();
+
 
    let { positions } = this.state 
 
@@ -192,16 +194,46 @@ handleCombat(e){
       enemyHp = enemyHp - weaponAttack >= 0 ? enemyHp - weaponAttack : 0 
       hp = hp - enemyAttack >= 0 ? hp - enemyAttack : 0
       xp += 5*enemyLevel 
+      if(enemyHp === 0){
+        // positions - the thug obliterated
+        let clonedArr = this.state.positions.slice(0) 
+        clonedArr[posY-1][posX] = 0
+        this.setState({ positions: clonedArr })
+        this.setState({
+          enemyDir : null,
+          enemyHp: null,
+          enemyAttack: null,
+          enemyLevel: null})}
       this.setState({enemyHp, hp, xp})
     } else if(enemyDir === "up" && e.target.id === "Xminus"){
       enemyHp = enemyHp - weaponAttack >=0 ? enemyHp - weaponAttack : 0 
       hp = hp - enemyAttack >= 0 ? hp - enemyAttack : 0
       xp += 5*enemyLevel 
+      if(enemyHp === 0){
+        // positions - the thug obliterated
+        let clonedArr = this.state.positions.slice(0) 
+        clonedArr[posY][posX-1] = 0
+        this.setState({ positions: clonedArr })
+        this.setState({
+          enemyDir : null,
+          enemyHp: null,
+          enemyAttack: null,
+          enemyLevel: null})}
       this.setState({enemyHp, hp, xp})
     } else if(enemyDir === "down" && e.target.id === "Xplus"){
       enemyHp = enemyHp - weaponAttack >=0 ? enemyHp - weaponAttack : 0 
       hp = hp - enemyAttack >= 0 ? hp - enemyAttack : 0
       xp += 5*enemyLevel 
+      if(enemyHp === 0){
+        // positions - the thug obliterated
+        let clonedArr = this.state.positions.slice(0) 
+        clonedArr[posY][posX+1] = 0
+        this.setState({ positions: clonedArr })
+        this.setState({
+          enemyDir : null,
+          enemyHp: null,
+          enemyAttack: null,
+          enemyLevel: null})}
       this.setState({enemyHp, hp, xp}) 
     }
 }
@@ -212,6 +244,7 @@ handleCombat(e){
 
 render() {
   //  console.log(this.state.enemyDir, this.state.enemyDir ? this.state.enemyHp : "");
+  if(this.state.hp === 0) { alert('Game Over') }
   let { posX, posY, positions } = this.state 
     let units = [];
     for (let i = 0; i < 30; i++) {
@@ -240,9 +273,12 @@ render() {
             <span>Weapon: {this.state.weaponLevel}</span>
           </div>
           <div className="actionbar">
-            <span> E level: {this.state.enemyLevel}</span>
-            <span> E hp: {this.state.enemyHp} </span>
-            <span> E attack: {this.state.enemyAttack} </span>
+            { this.state.enemyLevel 
+                ? (<div><span> E level: {this.state.enemyLevel}</span>
+                  <span> E hp: {this.state.enemyHp} </span>
+                  <span> E attack: {this.state.enemyAttack} </span></div>)
+                : null  
+            }
           </div>
         </div>
         <div className="container">{units}</div>

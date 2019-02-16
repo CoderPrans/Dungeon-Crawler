@@ -28,12 +28,12 @@ body {
 
 .brick {
   background: firebrick;
-  border: 1px solid #888;
+  border: 1px solid slategray;
 }
 
 .visible {
-  background: lightgray;
-  border: 1px solid silver;
+  background: slategray;
+  border: 1px solid slategray;
 }
 
 .dirButton {
@@ -51,7 +51,7 @@ body {
   }
 
   100% {
-    background: rgb(0, 125, 225);
+    background: rgb(0, 0, 225);
   }
 }
 @keyframes blinkblack {
