@@ -16,7 +16,7 @@ const weapon = [
   ["fire", 80]
 ]; 
 
-// TODO health potions
+// TODO multi level enemy, program map algorithm
 
 // defines the position of enemy. choses a random position each time.
 let positions = new Array(60)
@@ -24,8 +24,24 @@ let positions = new Array(60)
 for(let i = 0; i < positions.length; i++){
    positions[i] = new Array(30).fill(0);
   for(let j = 0; j < positions[i].length; j++){
-    if(Math.random() < 0.01 && map[i].indexOf(j) === -1){
+    if(Math.random() < 0.01 
+      && map[i].indexOf(j) === -1){
       positions[i][j] = 1;
+    }
+  }
+}
+
+// health postions 
+// increases hp by 65
+let hpotions = new Array(60)
+
+for(let i = 0; i < hpotions.length; i++){
+  hpotions[i] = new Array(30).fill(0);
+  for(let j = 0; j < hpotions[i].length; j++){
+    if(Math.random() < 0.01 
+      && map[i].indexOf(j) === -1 
+      && positions[i][j] === 0){
+      hpotions[i][j] = 1;
     }
   }
 }
@@ -43,6 +59,7 @@ class App extends React.Component {
       hp: 100,
       xp: 25,
       positions,
+      hpotions,
       enemyDir: null,
       enemyHp: null,
       enemyAttack: null,
@@ -69,39 +86,38 @@ class App extends React.Component {
       }
     });
     this.setState({ positions })
+    this.setState({ hpotions })
   }
  
  detectEnemy(nextY, nextX){
 
    let { positions } = this.state
     
-   if(nextY && nextX && nextY + 1 < 59 && nextX + 1 < 29){
-    if(positions[nextY + 1][nextX] === 1){
+   if(nextY + 1 <= 59 && positions[nextY + 1][nextX] === 1){
       alert('Enemy detected!, right');
       this.setState({fightOn: true})
       return {enemyDir: "right", enemyLevel: 1, enemyHp: enemy[1].hp, enemyAttack: enemy[1].attack}
-    } else if(positions[nextY][nextX + 1] === 1){
+   } else if(nextX + 1 <= 29 && positions[nextY][nextX + 1] === 1){
       alert('Enemy detected!, down');
       this.setState({fightOn: true})
       return {enemyDir: "down", enemyLevel: 1, enemyHp: enemy[1].hp, enemyAttack: enemy[1].attack}
-    } else if(positions[nextY - 1][nextX] === 1){
+    } else if(nextY - 1 >= 0 && positions[nextY - 1][nextX] === 1){
       alert('Enemy detected!, left');
       this.setState({fightOn: true})
       return {enemyDir: "left", enemyLevel: 1, enemyHp: enemy[1].hp, enemyAttack: enemy[1].attack}
-    } else if(positions[nextY][nextX - 1] === 1){
+    } else if(nextX - 1 >= 0 && positions[nextY][nextX - 1] === 1){
       alert('Enemy detected!, up');
       this.setState({fightOn: true})
       return {enemyDir: "up", enemyLevel: 1, enemyHp: enemy[1].hp, enemyAttack: enemy[1].attack}
     } console.log("from inside the detectEnemy", this.state.fightOn)
      return "clear" 
    } 
-  }
 
 handleTravel(e) {
     e.preventDefault();
 
 
-   let { positions } = this.state 
+   let { positions, hpotions } = this.state 
 
  if(this.state.enemyDir === null){
     let {posX, posY} = this.state; 
@@ -117,7 +133,11 @@ handleTravel(e) {
         } else {
           this.setState({fightOn: false})
         }
-        this.setState({ posY: posY + 1 });
+        let currHp = this.state.hp
+        if(hpotions[posY + 1][posX] === 1 ){ this.setState({ hp : currHp+=65 }); alert('potion collected')}
+        let clonedPotions = hpotions.slice(0)
+        clonedPotions[posY + 1][posX] = 0 
+        this.setState({ posY: posY + 1, hpotions: clonedPotions });
       } 
     } else if (e.target.id === "Xplus") {
       if (
@@ -132,7 +152,11 @@ handleTravel(e) {
           this.setState({fightOn: false})
         }
  
-        this.setState({ posX: posX + 1 });
+        let currHp = this.state.hp
+        if(hpotions[posY][posX + 1] === 1 ){ this.setState({ hp : currHp+=65 }); alert('potion collected')}
+        let clonedPotions = hpotions.slice(0)
+        clonedPotions[posY][posX + 1] = 0
+        this.setState({ posX: posX + 1, hpotions: clonedPotions });
       }
     } else if (e.target.id === "Yminus") {
       if (
@@ -147,7 +171,11 @@ handleTravel(e) {
           this.setState({fightOn: false})
         }
 
-        this.setState({ posY: posY - 1 });
+        let currHp = this.state.hp
+        if(hpotions[posY - 1][posX] === 1 ){ this.setState({ hp : currHp+=65 }); alert('potion collected')}
+        let clonedPotions = hpotions.slice(0)
+        clonedPotions[posY - 1][posX] = 0
+        this.setState({ posY: posY - 1, hpotions: clonedPotions });
       }
     } else {
       if (
@@ -162,7 +190,11 @@ handleTravel(e) {
           this.setState({fightOn: false})
         }
   
-        this.setState({ posX: posX - 1 });
+        let currHp = this.state.hp
+        if(hpotions[posY][posX - 1] === 1 ){ this.setState({ hp : currHp+=65 }); alert('potion collected')}
+        let clonedPotions = hpotions.slice(0)
+        clonedPotions[posY][posX - 1] = 0
+        this.setState({ posX: posX - 1, hpotions: clonedPotions });
       }
     }
  } else {
@@ -250,6 +282,7 @@ render() {
     for (let i = 0; i < 30; i++) {
       for (let j = 0; j < 60; j++) {
         let thugPresence = positions[j][i]
+        let potionPresence = hpotions[j][i]
         units.push(
           <Units
             meX={i}
@@ -257,6 +290,7 @@ render() {
             posX={posX}
             posY={posY}
             thugP={thugPresence}
+            potionP={potionPresence}
           />
         );
       }
@@ -302,7 +336,7 @@ render() {
 }
 
 const Units = props => {
-  const { meX, meY, posX, posY, thugP } = props;
+  const { meX, meY, posX, posY, thugP, potionP } = props;
   if (Math.abs(meX - posX) <= 6 && Math.abs(meY - posY) <= 6) {
     if (meX === posX && meY === posY) {
       return <div className="units pos" />;
@@ -310,11 +344,12 @@ const Units = props => {
       return <div className="units brick" />;
     } else {
       //console.log(thugP)
-      return thugP &&
-        Math.abs(10 * meY - meX) !== 0 ? (
+      return thugP ? (
         <div className="units thug" />
-      ) : (
-        <div className="units visible" />
+      ) : potionP ? (
+                     <div className="units potion" />) 
+                  : (
+                     <div className="units visible" />
       );
     }
   } else {

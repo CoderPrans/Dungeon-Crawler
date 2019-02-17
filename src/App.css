@@ -97,3 +97,6 @@ body {
     transform: rotate(360deg);
   }
 }
+.potion {
+    background: green;
+}
