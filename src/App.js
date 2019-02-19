@@ -18,35 +18,46 @@ const weapon = [
 
 // TODO multi level enemy, program map algorithm
 
-// defines the position of enemy. choses a random position each time.
 let positions = new Array(60)
+let hpotions = new Array(60)
 
 for(let i = 0; i < positions.length; i++){
    positions[i] = new Array(30).fill(0);
+   hpotions[i] = new Array(30).fill(0)
   for(let j = 0; j < positions[i].length; j++){
     if(Math.random() < 0.01 
       && map[i].indexOf(j) === -1){
       positions[i][j] = 1;
-    }
-  }
-}
-
-// health postions 
-// increases hp by 65
-let hpotions = new Array(60)
-
-for(let i = 0; i < hpotions.length; i++){
-  hpotions[i] = new Array(30).fill(0);
-  for(let j = 0; j < hpotions[i].length; j++){
-    if(Math.random() < 0.01 
+    } else if(Math.random() < 0.005 
       && map[i].indexOf(j) === -1 
       && positions[i][j] === 0){
       hpotions[i][j] = 1;
+    } 
+  }
+}
+
+let weapons = new Array(60)
+
+for(let i = 0; i < weapons.length; i++){
+  weapons[i] = new Array(30).fill(0)
+  for(let j = 0; j < weapons[i].length; j++){
+    if(Math.random() < 0.01
+      && map[i].indexOf(j) === -1
+      && positions[i][j] === 0
+      && hpotions[i][j] === 0){
+      if(Math.random() < 0.4){
+        weapons[i][j] = 2 
+      } else if(Math.random() < 0.3){
+        weapons[i][j] = 3 
+      } else if(Math.random() < 0.2){
+        weapons[i][j] = 4 
+      }    
     }
   }
 }
 
 console.log(positions);
+console.log(weapons);
 
 console.log(map);
 
@@ -60,6 +71,7 @@ class App extends React.Component {
       xp: 25,
       positions,
       hpotions,
+      weapons,
       enemyDir: null,
       enemyHp: null,
       enemyAttack: null,
@@ -74,7 +86,7 @@ class App extends React.Component {
 
   componentDidMount() {
  
-    document.addEventListener("keyup", e => { e.preventDefault();
+    document.addEventListener("keydown", e => { e.preventDefault();
       if (e.keyCode === 39) {
         document.getElementById("Yplus").click(); 
       } else if (e.keyCode === 40) {
@@ -117,7 +129,7 @@ handleTravel(e) {
     e.preventDefault();
 
 
-   let { positions, hpotions } = this.state 
+   let { positions, hpotions, weapons } = this.state 
 
  if(this.state.enemyDir === null){
     let {posX, posY} = this.state; 
@@ -135,9 +147,12 @@ handleTravel(e) {
         }
         let currHp = this.state.hp
         if(hpotions[posY + 1][posX] === 1 ){ this.setState({ hp : currHp+=65 }); alert('potion collected')}
+        if(weapons[posY + 1][posX] !== 0){ this.setState({ weaponLevel : weapons[posY + 1][posX] }); alert(`picked a ${weapon[this.state.weaponLevel][0]}`)}
         let clonedPotions = hpotions.slice(0)
         clonedPotions[posY + 1][posX] = 0 
-        this.setState({ posY: posY + 1, hpotions: clonedPotions });
+        let clonedWeapons = weapons.slice(0)
+        clonedWeapons[posY + 1][posX] = 0
+        this.setState({ posY: posY + 1, hpotions: clonedPotions, weapons: clonedWeapons });
       } 
     } else if (e.target.id === "Xplus") {
       if (
@@ -154,9 +169,12 @@ handleTravel(e) {
  
         let currHp = this.state.hp
         if(hpotions[posY][posX + 1] === 1 ){ this.setState({ hp : currHp+=65 }); alert('potion collected')}
+        if(weapons[posY][posX + 1] !== 0 ){ this.setState({ weaponLevel : weapons[posY][posX + 1]}); alert(`picked a ${weapon[this.state.weaponLevel][0]}`)}
         let clonedPotions = hpotions.slice(0)
         clonedPotions[posY][posX + 1] = 0
-        this.setState({ posX: posX + 1, hpotions: clonedPotions });
+        let clonedWeapons = weapons.slice(0)
+        clonedWeapons[posY][posX + 1] = 0
+        this.setState({ posX: posX + 1, hpotions: clonedPotions, weapons: clonedWeapons });
       }
     } else if (e.target.id === "Yminus") {
       if (
@@ -173,9 +191,12 @@ handleTravel(e) {
 
         let currHp = this.state.hp
         if(hpotions[posY - 1][posX] === 1 ){ this.setState({ hp : currHp+=65 }); alert('potion collected')}
+        if(weapons[posY - 1][posX] !== 0 ){ this.setState({weaponLevel: weapons[posY - 1][posX]}); alert(`picked a ${weapon[this.state.weaponLevel][0]}`)}
         let clonedPotions = hpotions.slice(0)
         clonedPotions[posY - 1][posX] = 0
-        this.setState({ posY: posY - 1, hpotions: clonedPotions });
+        let clonedWeapons = weapons.slice(0)
+        clonedWeapons[posY - 1][posX] = 0
+        this.setState({ posY: posY - 1, hpotions: clonedPotions, weapons: clonedWeapons});
       }
     } else {
       if (
@@ -192,9 +213,12 @@ handleTravel(e) {
   
         let currHp = this.state.hp
         if(hpotions[posY][posX - 1] === 1 ){ this.setState({ hp : currHp+=65 }); alert('potion collected')}
+        if(weapons[posY][posX - 1] !== 0){ this.setState({weaponLevel: weapons[posY][posX - 1]}); alert(`picked a ${weapon[this.state.weaponLevel][0]}`)}
         let clonedPotions = hpotions.slice(0)
         clonedPotions[posY][posX - 1] = 0
-        this.setState({ posX: posX - 1, hpotions: clonedPotions });
+        let clonedWeapons = weapons.slice(0)
+        clonedWeapons[posY][posX - 1] = 0
+        this.setState({ posX: posX - 1, hpotions: clonedPotions, weapons: clonedWeapons});
       }
     }
  } else {
@@ -277,12 +301,13 @@ handleCombat(e){
 render() {
   //  console.log(this.state.enemyDir, this.state.enemyDir ? this.state.enemyHp : "");
   if(this.state.hp === 0) { alert('Game Over') }
-  let { posX, posY, positions } = this.state 
+  let { posX, posY, positions, hpotions, weapons } = this.state 
     let units = [];
     for (let i = 0; i < 30; i++) {
       for (let j = 0; j < 60; j++) {
         let thugPresence = positions[j][i]
         let potionPresence = hpotions[j][i]
+        let weaponL = weapons[j][i]
         units.push(
           <Units
             meX={i}
@@ -291,6 +316,7 @@ render() {
             posY={posY}
             thugP={thugPresence}
             potionP={potionPresence}
+            weaponL={weaponL}
           />
         );
       }
@@ -336,7 +362,7 @@ render() {
 }
 
 const Units = props => {
-  const { meX, meY, posX, posY, thugP, potionP } = props;
+  const { meX, meY, posX, posY, thugP, potionP, weaponL } = props;
   if (Math.abs(meX - posX) <= 6 && Math.abs(meY - posY) <= 6) {
     if (meX === posX && meY === posY) {
       return <div className="units pos" />;
@@ -344,13 +370,12 @@ const Units = props => {
       return <div className="units brick" />;
     } else {
       //console.log(thugP)
-      return thugP ? (
-        <div className="units thug" />
-      ) : potionP ? (
-                     <div className="units potion" />) 
-                  : (
-                     <div className="units visible" />
-      );
+      return thugP ? (<div className="units thug" />)
+        : potionP ? (<div className="units potion" />) 
+        : weaponL === 2 ? (<div className="units weapon2" />)
+        : weaponL === 3 ? (<div className="units weapon3" />)
+        : weaponL === 4 ? (<div className="units weapon4" />)
+        : (<div className="units visible" />);
     }
   } else {
     return <div className="units" />;

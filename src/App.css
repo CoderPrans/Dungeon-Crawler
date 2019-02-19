@@ -100,3 +100,15 @@ body {
 .potion {
     background: green;
 }
+.weapon1 {
+    background: yellow;
+}
+.weapon2 {
+    background: red; 
+}
+.weapon3 {
+    background: navy;
+}
+.weapon4 {
+    background: white;
+}
