@@ -1,13 +1,13 @@
 {
-  "main.css": "/Dungeon-Crawler/static/css/main.3a47c510.chunk.css",
-  "main.js": "/Dungeon-Crawler/static/js/main.568baab5.chunk.js",
-  "main.js.map": "/Dungeon-Crawler/static/js/main.568baab5.chunk.js.map",
+  "main.css": "/Dungeon-Crawler/static/css/main.071e6d2f.chunk.css",
+  "main.js": "/Dungeon-Crawler/static/js/main.64db28d8.chunk.js",
+  "main.js.map": "/Dungeon-Crawler/static/js/main.64db28d8.chunk.js.map",
   "static/js/1.f715b2e0.chunk.js": "/Dungeon-Crawler/static/js/1.f715b2e0.chunk.js",
   "static/js/1.f715b2e0.chunk.js.map": "/Dungeon-Crawler/static/js/1.f715b2e0.chunk.js.map",
   "runtime~main.js": "/Dungeon-Crawler/static/js/runtime~main.d01edacb.js",
   "runtime~main.js.map": "/Dungeon-Crawler/static/js/runtime~main.d01edacb.js.map",
-  "static/css/main.3a47c510.chunk.css.map": "/Dungeon-Crawler/static/css/main.3a47c510.chunk.css.map",
+  "static/css/main.071e6d2f.chunk.css.map": "/Dungeon-Crawler/static/css/main.071e6d2f.chunk.css.map",
   "index.html": "/Dungeon-Crawler/index.html",
-  "precache-manifest.fcfeb364c937f69aba5c7d1c890a2a2a.js": "/Dungeon-Crawler/precache-manifest.fcfeb364c937f69aba5c7d1c890a2a2a.js",
+  "precache-manifest.2823ab06b6335841c75e2c8c406ac2eb.js": "/Dungeon-Crawler/precache-manifest.2823ab06b6335841c75e2c8c406ac2eb.js",
   "service-worker.js": "/Dungeon-Crawler/service-worker.js"
 }
