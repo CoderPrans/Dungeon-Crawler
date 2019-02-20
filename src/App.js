@@ -46,11 +46,11 @@ for(let i = 0; i < weapons.length; i++){
       && positions[i][j] === 0
       && hpotions[i][j] === 0){
       if(Math.random() < 0.4){
-        weapons[i][j] = 2 
+        weapons[i][j] = 1 
       } else if(Math.random() < 0.3){
-        weapons[i][j] = 3 
+        weapons[i][j] = 2 
       } else if(Math.random() < 0.2){
-        weapons[i][j] = 4 
+        weapons[i][j] = 3 
       }    
     }
   }
@@ -146,7 +146,7 @@ handleTravel(e) {
         }
         let currHp = this.state.hp
         if(hpotions[posY + 1][posX] === 1 ){ this.setState({ hp : currHp+=65 }); alert('potion collected')}
-        if(weapons[posY + 1][posX] !== 0){ this.setState({ weaponLevel : weapons[posY + 1][posX] }); alert(`picked a ${weapon[this.state.weaponLevel][0]}`)}
+        if(weapons[posY + 1][posX] !== 0){ this.setState({ weaponLevel : weapons[posY + 1][posX] }); alert(`picked a ${weapon[weapons[posY + 1][posX]][0]}`)}
         let clonedPotions = hpotions.slice(0)
         clonedPotions[posY + 1][posX] = 0 
         let clonedWeapons = weapons.slice(0)
@@ -168,7 +168,7 @@ handleTravel(e) {
  
         let currHp = this.state.hp
         if(hpotions[posY][posX + 1] === 1 ){ this.setState({ hp : currHp+=65 }); alert('potion collected')}
-        if(weapons[posY][posX + 1] !== 0 ){ this.setState({ weaponLevel : weapons[posY][posX + 1]}); alert(`picked a ${weapon[this.state.weaponLevel][0]}`)}
+        if(weapons[posY][posX + 1] !== 0 ){ this.setState({ weaponLevel : weapons[posY][posX + 1]}); alert(`picked a ${weapon[weapons[posY][posX + 1]][0]}`)}
         let clonedPotions = hpotions.slice(0)
         clonedPotions[posY][posX + 1] = 0
         let clonedWeapons = weapons.slice(0)
@@ -190,7 +190,7 @@ handleTravel(e) {
 
         let currHp = this.state.hp
         if(hpotions[posY - 1][posX] === 1 ){ this.setState({ hp : currHp+=65 }); alert('potion collected')}
-        if(weapons[posY - 1][posX] !== 0 ){ this.setState({weaponLevel: weapons[posY - 1][posX]}); alert(`picked a ${weapon[this.state.weaponLevel][0]}`)}
+        if(weapons[posY - 1][posX] !== 0 ){ this.setState({weaponLevel: weapons[posY - 1][posX]}); alert(`picked a ${weapon[weapons[posY - 1][posX]][0]}`)}
         let clonedPotions = hpotions.slice(0)
         clonedPotions[posY - 1][posX] = 0
         let clonedWeapons = weapons.slice(0)
@@ -212,7 +212,7 @@ handleTravel(e) {
   
         let currHp = this.state.hp
         if(hpotions[posY][posX - 1] === 1 ){ this.setState({ hp : currHp+=65 }); alert('potion collected')}
-        if(weapons[posY][posX - 1] !== 0){ this.setState({weaponLevel: weapons[posY][posX - 1]}); alert(`picked a ${weapon[this.state.weaponLevel][0]}`)}
+        if(weapons[posY][posX - 1] !== 0){ this.setState({weaponLevel: weapons[posY][posX - 1]}); alert(`picked a ${weapon[weapons[posY][posX - 1]][0]}`)}
         let clonedPotions = hpotions.slice(0)
         clonedPotions[posY][posX - 1] = 0
         let clonedWeapons = weapons.slice(0)
@@ -367,9 +367,9 @@ const Units = props => {
         : map[meY].indexOf(meX) >= 0 ? <div className="units brick" />
         : thugP ? (<div className="units thug" />)
           : potionP ? (<div className="units potion" />) 
-          : weaponL === 2 ? (<div className="units weapon2" />)
-          : weaponL === 3 ? (<div className="units weapon3" />)
-          : weaponL === 4 ? (<div className="units weapon4" />)
+          : weaponL === 1 ? (<div className="units weapon2" />)
+          : weaponL === 2 ? (<div className="units weapon3" />)
+          : weaponL === 3 ? (<div className="units weapon4" />)
           : (<div className="units visible" />)
      : <div className="units" />
   };
