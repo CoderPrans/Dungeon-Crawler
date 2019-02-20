@@ -56,10 +56,9 @@ for(let i = 0; i < weapons.length; i++){
   }
 }
 
-console.log(positions);
-console.log(weapons);
-
-console.log(map);
+//console.log(positions);
+//console.log(weapons);
+//console.log(map);
 
 class App extends React.Component {
   constructor(props) {
@@ -363,23 +362,16 @@ render() {
 
 const Units = props => {
   const { meX, meY, posX, posY, thugP, potionP, weaponL } = props;
-  if (Math.abs(meX - posX) <= 6 && Math.abs(meY - posY) <= 6) {
-    if (meX === posX && meY === posY) {
-      return <div className="units pos" />;
-    } else if (map[meY].indexOf(meX) >= 0) {
-      return <div className="units brick" />;
-    } else {
-      //console.log(thugP)
-      return thugP ? (<div className="units thug" />)
-        : potionP ? (<div className="units potion" />) 
-        : weaponL === 2 ? (<div className="units weapon2" />)
-        : weaponL === 3 ? (<div className="units weapon3" />)
-        : weaponL === 4 ? (<div className="units weapon4" />)
-        : (<div className="units visible" />);
-    }
-  } else {
-    return <div className="units" />;
-  }
-};
+    return Math.abs(meX - posX) <= 6 && Math.abs(meY - posY) <= 6
+      ? meX === posX && meY === posY ? <div className="units pos" />
+        : map[meY].indexOf(meX) >= 0 ? <div className="units brick" />
+        : thugP ? (<div className="units thug" />)
+          : potionP ? (<div className="units potion" />) 
+          : weaponL === 2 ? (<div className="units weapon2" />)
+          : weaponL === 3 ? (<div className="units weapon3" />)
+          : weaponL === 4 ? (<div className="units weapon4" />)
+          : (<div className="units visible" />)
+     : <div className="units" />
+  };
 
 export default App;
