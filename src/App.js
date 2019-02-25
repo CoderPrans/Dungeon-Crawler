@@ -1,6 +1,6 @@
 import React from "react";
 import "./App.css";
-import map from "./Maps";
+import DungeonGenerator from "./Maps";
 
 const enemy = [
   { hp: 50, attack: 15 }, // color: purple, attack: 10
@@ -10,39 +10,47 @@ const enemy = [
 ];
 
 const weapon = [
-  ["hand",  15],
-  ["hammer", 45],
-  ["sword", 60],
-  ["fire", 80]
+  ["Fist",  15],
+  ["Hammer", 45],
+  ["Sword", 60],
+  ["Fire", 80]
 ]; 
+
+var floorMap = DungeonGenerator.generate({
+    maxRoomSize: 7,
+    minRoomSize: 7,
+    padding: 2,
+    rooms: 25,
+    rows: 50,
+    cols: 30
+  });
 
 // TODO multi level enemy, program map algorithm
 
-let positions = new Array(60)
-let hpotions = new Array(60)
+let positions = new Array(50)
+let hpotions = new Array(50)
 
 for(let i = 0; i < positions.length; i++){
    positions[i] = new Array(30).fill(0);
    hpotions[i] = new Array(30).fill(0)
   for(let j = 0; j < positions[i].length; j++){
     if(Math.random() < 0.01 
-      && map[i].indexOf(j) === -1){
+      && floorMap[i][j].cellType === "empty"){
       positions[i][j] = 1;
     } else if(Math.random() < 0.005 
-      && map[i].indexOf(j) === -1 
+      && floorMap[i][j].cellType === "empty" 
       && positions[i][j] === 0){
       hpotions[i][j] = 1;
     } 
   }
 }
 
-let weapons = new Array(60)
+let weapons = new Array(50)
 
 for(let i = 0; i < weapons.length; i++){
   weapons[i] = new Array(30).fill(0)
   for(let j = 0; j < weapons[i].length; j++){
     if(Math.random() < 0.01
-      && map[i].indexOf(j) === -1
       && positions[i][j] === 0
       && hpotions[i][j] === 0){
       if(Math.random() < 0.4){
@@ -58,14 +66,14 @@ for(let i = 0; i < weapons.length; i++){
 
 //console.log(positions);
 //console.log(weapons);
-//console.log(map);
+console.log(floorMap);
 
 class App extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
-      posX: 0,
-      posY: 0,
+      posX: Math.round(Math.random()*30),
+      posY: Math.round(Math.random()*50),
       hp: 100,
       xp: 25,
       positions,
@@ -74,7 +82,7 @@ class App extends React.Component {
       enemyDir: null,
       enemyHp: null,
       enemyAttack: null,
-      weaponLevel: 1,
+      weaponLevel: 0,
       enemyLevel: null,
       fightOn: false
     };
@@ -96,15 +104,32 @@ class App extends React.Component {
         document.getElementById("Xminus").click(); 
       }
     });
-    this.setState({ positions })
-    this.setState({ hpotions })
+    this.setState({ positions, hpotions })
+      let posX;
+      let posY;
+      for(let i = 0; i < 30; i++){
+          for(let j = 0; j < 50; j++){
+              if(Math.random() < 0.2 &&
+                 !posX &&
+                 !posY &&
+                 floorMap[j][i].cellType === "empty" &&
+                 positions[i][j] === 0 &&
+                 this.state.weapons[i][j] === 0 &&
+                 hpotions[i][j] === 0
+              ){
+                  posX = i;
+                  posY = j;
+              }  
+          } 
+      }
+      this.setState({ posX, posY })
   }
  
  detectEnemy(nextY, nextX){
 
    let { positions } = this.state
     
-   if(nextY + 1 <= 59 && positions[nextY + 1][nextX] === 1){
+   if(nextY + 1 <= 49 && positions[nextY + 1][nextX] === 1){
       alert('Enemy detected!, right');
       this.setState({fightOn: true})
       return {enemyDir: "right", enemyLevel: 1, enemyHp: enemy[1].hp, enemyAttack: enemy[1].attack}
@@ -134,8 +159,8 @@ handleTravel(e) {
     let {posX, posY} = this.state; 
     if (e.target.id === "Yplus") {
       if (
-        posY < 59 &&
-        map[posY + 1].indexOf(posX) < 0 &&
+        posY < 49 &&
+        floorMap[posY + 1][posX].cellType === "empty" &&
         positions[posY + 1][posX] !== 1 
       ) {
         if(typeof this.detectEnemy(posY + 1, posX) === 'object'){
@@ -156,7 +181,7 @@ handleTravel(e) {
     } else if (e.target.id === "Xplus") {
       if (
         posX < 29 &&
-        map[posY].indexOf(posX + 1) < 0 &&
+        floorMap[posY][posX + 1].cellType === "empty" &&
         positions[posY][posX + 1] !== 1
       ) {
         if(typeof this.detectEnemy(posY, posX + 1) === 'object'){
@@ -177,8 +202,8 @@ handleTravel(e) {
       }
     } else if (e.target.id === "Yminus") {
       if (
-        posY > 0 &&
-        map[posY - 1].indexOf(posX) < 0 &&
+        posY > 0 && 
+        floorMap[posY - 1][posX].cellType === "empty" &&
         positions[posY - 1][posX] !== 1
       ) {
          if(typeof this.detectEnemy(posY - 1, posX) === 'object'){
@@ -200,7 +225,7 @@ handleTravel(e) {
     } else {
       if (
         posX > 0 &&
-        map[posY].indexOf(posX - 1) < 0 &&
+        floorMap[posY][posX - 1].cellType === "empty" &&
         positions[posY][posX - 1] !== 1
       ) {
          if(typeof this.detectEnemy(posY, posX - 1) === 'object'){
@@ -303,7 +328,7 @@ render() {
   let { posX, posY, positions, hpotions, weapons } = this.state 
     let units = [];
     for (let i = 0; i < 30; i++) {
-      for (let j = 0; j < 60; j++) {
+      for (let j = 0; j < 50; j++) {
         let thugPresence = positions[j][i]
         let potionPresence = hpotions[j][i]
         let weaponL = weapons[j][i]
@@ -329,7 +354,7 @@ render() {
           <div className="statsbar">
             <span>Hp: {this.state.hp}</span>
             <span>Xp: {this.state.xp}</span>
-            <span>Weapon: {this.state.weaponLevel}</span>
+            <span>Weapon: {weapon[this.state.weaponLevel][0]}</span>
           </div>
           <div className="actionbar">
             { this.state.enemyLevel 
@@ -341,18 +366,18 @@ render() {
           </div>
         </div>
         <div className="container">{units}</div>
-        <div>
-          <button id="Yplus" className="dirButton" onClick={this.handleTravel}>
-            right
-          </button>
-          <button id="Xplus" className="dirButton" onClick={this.handleTravel}>
-            down
-          </button>
+        <div className="navigation">
           <button id="Yminus" className="dirButton" onClick={this.handleTravel}>
-            left
+           &#8678;
           </button>
           <button id="Xminus" className="dirButton" onClick={this.handleTravel}>
-            up
+           &#8679;
+          </button>
+          <button id="Xplus" className="dirButton" onClick={this.handleTravel}>
+           &#8681;
+          </button>
+          <button id="Yplus" className="dirButton" onClick={this.handleTravel}>
+           &#8680;
           </button>
         </div>
       </div>
@@ -364,7 +389,7 @@ const Units = props => {
   const { meX, meY, posX, posY, thugP, potionP, weaponL } = props;
     return Math.abs(meX - posX) <= 6 && Math.abs(meY - posY) <= 6
       ? meX === posX && meY === posY ? <div className="units pos" />
-        : map[meY].indexOf(meX) >= 0 ? <div className="units brick" />
+        : floorMap[meY][meX].cellType === "wall" ? <div className="units brick" />
         : thugP ? (<div className="units thug" />)
           : potionP ? (<div className="units potion" />) 
           : weaponL === 1 ? (<div className="units weapon2" />)

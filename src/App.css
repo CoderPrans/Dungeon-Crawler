@@ -2,70 +2,85 @@ body {
   background: #333;
 }
 .units {
-  height: 15px;
-  width: 15px;
-  background: #222;
+  height: 19px;
+  width: 19px;
+  background-color: #222;
   border: 1px solid #222;
   display: inline-block;
 }
 
 .units:hover {
-  background: orange;
+  background-color: orange;
 }
 
 .container {
-  width: 1020px;
+  width: 1050px;
   line-height: 0;
   margin: 30px auto;
-  border: 7px double #222;
+  border: 5px double #222;
 }
 
 .pos {
   animation-name: blink;
   animation-duration: 0.4s;
   animation-iteration-count: infinite;
+  background: url(hero.png) slategray center center no-repeat;
+  background-size: cover;
+  border-color: slategray;
 }
 
 .brick {
-  background: firebrick;
+  background-color: firebrick;
   border: 1px solid slategray;
 }
 
 .visible {
-  background: slategray;
+  background-color: slategray;
   border: 1px solid slategray;
 }
 
 .dirButton {
   margin: 3px;
   padding: 5px 0;
-  background: #222;
+  background-color: rgba(32, 32, 32, 0.3);
   width: 55px;
   border: 1px ridge #888;
+  font-size: 20px;
   color: white;
+}
+
+.navigation {
+  position: fixed;
+  bottom: 5px;
+  left: 40vw;
 }
 
 @keyframes blink {
   0% {
-    background: lightgray;
+      background-color: #eee
   }
 
   100% {
-    background: rgb(0, 0, 225);
+      background-color: slategray
   }
 }
 @keyframes blinkblack {
   0% {
-    background: lightgray;
+    background-color: lightgray;
   }
 
   100% {
-    background: black;
+    background-color: black;
   }
 }
 .statsbar {
   display: inline-text;
+  background: #333;
+  padding: 5px;
   color: lightgreen;
+  position: fixed;
+  top: 5px;
+  left: 5px;
 }
 .statsbar span {
   font-size: 20px;
@@ -75,12 +90,20 @@ body {
   animation-name: spin;
   animation-duration: 0.5s;
   animation-iteration-count: infinite;
+  background: url(enemy.png) slategray center center no-repeat;
+  background-size: cover;
+  border-color: slategray;
+
 }
 .actionbar {
   display: inline-block;
   width: 380px;
   color: coral;
   font-size: 20px;
+  background: #333;
+  position: fixed;
+  top: 5px;
+  right: 1px;
 }
 .actionbar span {
   margin: 8px;
@@ -98,14 +121,24 @@ body {
   }
 }
 .potion {
-    background: green;
+    background: url(hp.png) green center center no-repeat;
+    background-size: cover;
+    border-color: slategray;
 }
 .weapon2 {
-    background: red; 
+    background: url(hammer.png) crimson center center no-repeat;
+    background-size: cover;
+    border-color: slategray;
+
 }
 .weapon3 {
-    background: navy;
+    background: url(sword.png) lightblue center center no-repeat;
+    background-size: cover;
+    border-color: slategray;
+
 }
 .weapon4 {
-    background: white;
+    background: url(fire.png) white center center no-repeat;
+    background-size: cover;
+    border-color: slategray;
 }
