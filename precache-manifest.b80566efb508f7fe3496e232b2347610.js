@@ -1,7 +1,7 @@
 self.__precacheManifest = [
   {
-    "revision": "83678a3dd17c8742b74fcd8283fc84c4",
-    "url": "/Dungeon-Crawler/static/media/sword.83678a3d.png"
+    "revision": "3104987c118d72a940ee8276cfde46ff",
+    "url": "/Dungeon-Crawler/static/media/sword.3104987c.svg"
   },
   {
     "revision": "6f618d894f90569e3ddb1b2180846287",
@@ -12,27 +12,31 @@ self.__precacheManifest = [
     "url": "/Dungeon-Crawler/static/media/hammer.0568da29.png"
   },
   {
+    "revision": "331f8220ebb10c2f885733f95ebc6abb",
+    "url": "/Dungeon-Crawler/static/media/enemy.331f8220.svg"
+  },
+  {
     "revision": "c14e9b762695d27465ce9789f5e9b6bf",
-    "url": "/Dungeon-Crawler/static/media/enemy.c14e9b76.png"
+    "url": "/Dungeon-Crawler/static/media/boss.c14e9b76.png"
   },
   {
     "revision": "d01edacba7eb1e590af6",
     "url": "/Dungeon-Crawler/static/js/runtime~main.d01edacb.js"
   },
   {
-    "revision": "673cbc98021320b89e4f",
-    "url": "/Dungeon-Crawler/static/js/main.673cbc98.chunk.js"
+    "revision": "2a948f2099bdb7775efe",
+    "url": "/Dungeon-Crawler/static/js/main.2a948f20.chunk.js"
   },
   {
     "revision": "6224800a280056a00c54",
     "url": "/Dungeon-Crawler/static/js/1.6224800a.chunk.js"
   },
   {
-    "revision": "673cbc98021320b89e4f",
-    "url": "/Dungeon-Crawler/static/css/main.ae1a8d0b.chunk.css"
+    "revision": "2a948f2099bdb7775efe",
+    "url": "/Dungeon-Crawler/static/css/main.8af5e12c.chunk.css"
   },
   {
-    "revision": "ae61aa750210d47ed1457a2fc6e64d81",
+    "revision": "e00cf7f88c421bb6889278eaa8965dbb",
     "url": "/Dungeon-Crawler/index.html"
   }
 ];
