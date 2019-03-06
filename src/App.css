@@ -1,11 +1,11 @@
 body {
-  background: #333;
+  background: #2d2d2d;
 }
 .units {
-  height: 19px;
-  width: 19px;
-  background-color: #222;
-  border: 1px solid #222;
+  height: 23px;
+  width: 23px;
+  background-color: #2d2d2d;
+  border: 1px solid #2d2d2d;
   display: inline-block;
 }
 
@@ -14,7 +14,7 @@ body {
 }
 
 .container {
-  width: 1050px;
+  width: 1250px;
   line-height: 0;
   margin: 30px auto;
   border: 5px double #222;
@@ -31,12 +31,12 @@ body {
 
 .brick {
   background-color: firebrick;
-  border: 1px solid slategray;
+  border: 1px solid #a44;
 }
 
 .visible {
-  background-color: slategray;
-  border: 1px solid slategray;
+  background-color: #bbb;
+  border: 1px solid #aaa;
 }
 
 .dirButton {
@@ -57,11 +57,11 @@ body {
 
 @keyframes blink {
   0% {
-      background-color: #eee
+    background-color: #eee;
   }
 
   100% {
-      background-color: slategray
+    background-color: slategray;
   }
 }
 @keyframes blinkblack {
@@ -87,13 +87,17 @@ body {
   margin: 10px;
 }
 .thug {
+  background: url(enemy.svg) #222 center center no-repeat;
+  background-size: cover;
+  border-color: #222;
+}
+.boss {
   animation-name: spin;
   animation-duration: 0.5s;
   animation-iteration-count: infinite;
-  background: url(enemy.png) slategray center center no-repeat;
+  background: url(boss.png) #bbb center center no-repeat;
   background-size: cover;
   border-color: slategray;
-
 }
 .actionbar {
   display: inline-block;
@@ -121,24 +125,22 @@ body {
   }
 }
 .potion {
-    background: url(hp.png) green center center no-repeat;
-    background-size: cover;
-    border-color: slategray;
+  background: url(hp.png) #3e3 center center no-repeat;
+  background-size: cover;
+  border-color: #3e3;
 }
 .weapon2 {
-    background: url(hammer.png) crimson center center no-repeat;
-    background-size: cover;
-    border-color: slategray;
-
+  background: url(hammer.png) indianred center center no-repeat;
+  background-size: cover;
+  border-color: indianred;
 }
 .weapon3 {
-    background: url(sword.png) lightblue center center no-repeat;
-    background-size: cover;
-    border-color: slategray;
-
+  background: url(sword.svg) dodgerblue center center no-repeat;
+  border-color: dodgerblue;
+  background-size: cover;
 }
 .weapon4 {
-    background: url(fire.png) white center center no-repeat;
-    background-size: cover;
-    border-color: slategray;
+  background: url(fire.png) white center center no-repeat;
+  background-size: cover;
+  border-color: white;
 }
