@@ -1,14 +1,14 @@
 {
-  "main.css": "/Dungeon-Crawler/static/css/main.8af5e12c.chunk.css",
-  "main.js": "/Dungeon-Crawler/static/js/main.2a948f20.chunk.js",
-  "main.js.map": "/Dungeon-Crawler/static/js/main.2a948f20.chunk.js.map",
+  "main.css": "/Dungeon-Crawler/static/css/main.18f7b0a6.chunk.css",
+  "main.js": "/Dungeon-Crawler/static/js/main.f657af12.chunk.js",
+  "main.js.map": "/Dungeon-Crawler/static/js/main.f657af12.chunk.js.map",
   "static/js/1.6224800a.chunk.js": "/Dungeon-Crawler/static/js/1.6224800a.chunk.js",
   "static/js/1.6224800a.chunk.js.map": "/Dungeon-Crawler/static/js/1.6224800a.chunk.js.map",
   "runtime~main.js": "/Dungeon-Crawler/static/js/runtime~main.d01edacb.js",
   "runtime~main.js.map": "/Dungeon-Crawler/static/js/runtime~main.d01edacb.js.map",
-  "static/media/App.css": "/Dungeon-Crawler/static/media/hp.6f618d89.png",
-  "static/css/main.8af5e12c.chunk.css.map": "/Dungeon-Crawler/static/css/main.8af5e12c.chunk.css.map",
+  "static/media/App.css": "/Dungeon-Crawler/static/media/hammer.0568da29.png",
+  "static/css/main.18f7b0a6.chunk.css.map": "/Dungeon-Crawler/static/css/main.18f7b0a6.chunk.css.map",
   "index.html": "/Dungeon-Crawler/index.html",
-  "precache-manifest.b80566efb508f7fe3496e232b2347610.js": "/Dungeon-Crawler/precache-manifest.b80566efb508f7fe3496e232b2347610.js",
+  "precache-manifest.7612918477204e79c4000a289e32c41d.js": "/Dungeon-Crawler/precache-manifest.7612918477204e79c4000a289e32c41d.js",
   "service-worker.js": "/Dungeon-Crawler/service-worker.js"
 }
