@@ -8,8 +8,8 @@
       "type": "image/x-icon"
     },
     {
-      "src": "hero.png",
-      "size": "256x256 144x144",
+      "src": "dungeon.png",
+      "size": "144x144 64x64 32x32 24x24 16x16",
       "type": "image/png"
     }
   ],

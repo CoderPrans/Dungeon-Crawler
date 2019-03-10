@@ -45,8 +45,9 @@ body {
 
 .dirButton {
   margin: 3px;
-  padding: 5px 0;
-  width: 35px;
+
+  width: 60px;
+  height: 60px;
   background-color: rgba(32, 32, 32, 0.3);
   border: 1px ridge #888;
   font-size: 20px;
@@ -54,8 +55,11 @@ body {
 }
 
 .navigation {
-  width: 170px;
-  margin: 0 auto;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  position: fixed;
+  bottom: 2px;
 }
 
 @keyframes blink {
