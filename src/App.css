@@ -13,11 +13,15 @@ body {
   background-color: orange;
 }
 
+.container-wrapper {
+  width: 280px;
+  height: 390px;
+  overflow: hidden;
+  margin: 50px auto;
+}
 .container {
   width: 1250px;
   line-height: 0;
-  margin: 30px auto;
-  border: 5px double #222;
 }
 
 .pos {
@@ -42,17 +46,16 @@ body {
 .dirButton {
   margin: 3px;
   padding: 5px 0;
+  width: 35px;
   background-color: rgba(32, 32, 32, 0.3);
-  width: 55px;
   border: 1px ridge #888;
   font-size: 20px;
   color: white;
 }
 
 .navigation {
-  position: fixed;
-  bottom: 5px;
-  left: 40vw;
+  width: 170px;
+  margin: 0 auto;
 }
 
 @keyframes blink {
@@ -75,12 +78,11 @@ body {
 }
 .statsbar {
   display: inline-text;
-  background: #333;
+  background: rgba(13, 13, 13, 0.4);
+  text-align: center;
   padding: 5px;
   color: lightgreen;
-  position: fixed;
-  top: 5px;
-  left: 5px;
+  margin: 3px;
 }
 .statsbar span {
   font-size: 20px;
@@ -100,21 +102,22 @@ body {
   border-color: slategray;
 }
 .actionbar {
-  display: inline-block;
-  width: 380px;
+  display: inline-text;
+  text-align: center;
   color: coral;
-  font-size: 20px;
-  background: #333;
-  position: fixed;
-  top: 5px;
-  right: 1px;
+  background: rgba(13, 13, 13, 0.4);
+  padding: 5px;
+  margin: 3px;
 }
 .actionbar span {
-  margin: 8px;
+  font-size: 20px;
+  margin: 10px;
 }
-.display-section {
-  display: flex;
-  justify-content: space-between;
+@media screen and (min-width: 500px) {
+  .display-section {
+    display: flex;
+    justify-content: space-between;
+  }
 }
 @keyframes spin {
   0% {
@@ -143,4 +146,13 @@ body {
   background: url(fire.png) white center center no-repeat;
   background-size: cover;
   border-color: white;
+}
+.dialog {
+  position: absolute;
+  left: 0;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  margin: auto;
+  background: rgba(255, 255, 255, 0.4);
 }

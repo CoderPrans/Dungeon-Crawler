@@ -13,9 +13,9 @@ const weapon = [['Fist', 25], ['Hammer', 50], ['Sword', 80], ['Fire', 100]];
 
 var floorMap = DungeonGenerator.generate({
   maxRoomSize: 7,
-  minRoomSize: 7,
+  minRoomSize: 5,
   padding: 2,
-  rooms: 25,
+  rooms: 27,
   rows: 50,
   cols: 30,
 });
@@ -26,13 +26,19 @@ let positions = new Array(50);
 let hpotions = new Array(50);
 
 let bossFilled = false;
+let enemyCount = 0;
 for (let i = 0; i < positions.length; i++) {
   positions[i] = new Array(30).fill(0);
   hpotions[i] = new Array(30).fill(0);
   for (let j = 0; j < positions[i].length; j++) {
-    if (Math.random() < 0.01 && floorMap[i][j].cellType === 'empty') {
+    if (
+      i % 2 !== 0 &&
+      Math.random() < 0.03 &&
+      floorMap[i][j].cellType === 'empty'
+    ) {
       positions[i][j] = 1;
-      if (!bossFilled) {
+      enemyCount++;
+      if (i > 28 && !bossFilled) {
         positions[i][j] = 3;
         console.log(i, j);
         bossFilled = true;
@@ -53,11 +59,11 @@ for (let i = 0; i < weapons.length; i++) {
   weapons[i] = new Array(30).fill(0);
   for (let j = 0; j < weapons[i].length; j++) {
     if (Math.random() < 0.01 && positions[i][j] === 0 && hpotions[i][j] === 0) {
-      if (Math.random() < 0.4) {
+      if (Math.random() < 0.3) {
         weapons[i][j] = 1;
-      } else if (Math.random() < 0.3) {
-        weapons[i][j] = 2;
       } else if (Math.random() < 0.2) {
+        weapons[i][j] = 2;
+      } else if (Math.random() < 0.1) {
         weapons[i][j] = 3;
       }
     }
@@ -79,6 +85,7 @@ class App extends React.Component {
       positions,
       hpotions,
       weapons,
+      enemyCount,
       enemyDir: null,
       enemyHp: null,
       enemyAttack: null,
@@ -124,7 +131,7 @@ class App extends React.Component {
         }
       }
     }
-    this.setState({posX, posY});
+    this.setState({posX, posY, enemyCount});
   }
 
   detectEnemy(nextY, nextX) {
@@ -351,6 +358,7 @@ class App extends React.Component {
         enemyDir,
         enemyHp,
         enemyAttack,
+        enemyCount,
         posY,
         posX,
       } = this.state,
@@ -369,7 +377,7 @@ class App extends React.Component {
         }
         let clonedArr = this.state.positions.slice(0);
         clonedArr[posY + 1][posX] = 0;
-        this.setState({positions: clonedArr});
+        this.setState({positions: clonedArr, enemyCount: enemyCount - 1});
         this.setState({
           enemyDir: null,
           enemyHp: null,
@@ -391,7 +399,7 @@ class App extends React.Component {
         }
         let clonedArr = this.state.positions.slice(0);
         clonedArr[posY - 1][posX] = 0;
-        this.setState({positions: clonedArr});
+        this.setState({positions: clonedArr, enemyCount: enemyCount - 1});
         this.setState({
           enemyDir: null,
           enemyHp: null,
@@ -412,7 +420,7 @@ class App extends React.Component {
         }
         let clonedArr = this.state.positions.slice(0);
         clonedArr[posY][posX - 1] = 0;
-        this.setState({positions: clonedArr});
+        this.setState({positions: clonedArr, enemyCount: enemyCount - 1});
         this.setState({
           enemyDir: null,
           enemyHp: null,
@@ -433,7 +441,7 @@ class App extends React.Component {
         }
         let clonedArr = this.state.positions.slice(0);
         clonedArr[posY][posX + 1] = 0;
-        this.setState({positions: clonedArr});
+        this.setState({positions: clonedArr, enemyCount: enemyCount - 1});
         this.setState({
           enemyDir: null,
           enemyHp: null,
@@ -473,26 +481,64 @@ class App extends React.Component {
     }
     return (
       <div>
-        <h1 style={{color: 'gainsboro', textAlign: 'center'}}>
-          Dungeon Crawler
+        <h1
+          style={{
+            color: 'gainsboro',
+            textAlign: 'center',
+            margin: '0',
+            padding: '3px',
+          }}>
+          Dungeon Kings
         </h1>
         <div className="display-section">
           <div className="statsbar">
-            <span>Hp: {this.state.hp}</span>
-            <span>Xp: {this.state.xp}</span>
-            <span>Attack: {weapon[this.state.weaponLevel][1]}</span>
+            <span>
+              <span style={{fontSize: '13px'}}>HP</span>
+              {this.state.hp}
+            </span>
+            <span>
+              <span style={{fontSize: '13px'}}>XP</span>
+              {this.state.xp}
+            </span>
+            <span>
+              <span style={{fontSize: '13px'}}>Attack</span>
+              {weapon[this.state.weaponLevel][1]}
+            </span>
+            <span
+              style={{color: 'coral', fontWeight: 'bold', paddingTop: '30px'}}>
+              {this.state.enemyCount}
+            </span>
           </div>
           <div className="actionbar">
             {this.state.enemyLevel ? (
               <div>
-                <span> E level: {this.state.enemyLevel}</span>
-                <span> E hp: {this.state.enemyHp} </span>
-                <span> E attack: {this.state.enemyAttack} </span>
+                <span>
+                  <span style={{fontSize: '13px'}}>L</span>
+                  {this.state.enemyLevel}
+                </span>
+                <span>
+                  <span style={{fontSize: '13px'}}>HP</span>
+                  {this.state.enemyHp}{' '}
+                </span>
+                <span>
+                  <span style={{fontSize: '13px'}}>Attack</span>
+                  {this.state.enemyAttack}{' '}
+                </span>
               </div>
             ) : null}
           </div>
         </div>
-        <div className="container">{units}</div>
+        <div className="container-wrapper">
+          <div
+            className="container"
+            style={{
+              position: 'relative',
+              right: `${25 * (this.state.posY - 5)}px`,
+              bottom: `${25 * (this.state.posX - 5)}px`,
+            }}>
+            {units}
+          </div>
+        </div>
         <div className="navigation">
           <button id="Yminus" className="dirButton" onClick={this.handleTravel}>
             &#8678;
@@ -514,7 +560,7 @@ class App extends React.Component {
 
 const Units = props => {
   const {meX, meY, posX, posY, thugP, potionP, weaponL} = props;
-  return Math.abs(meX - posX) <= 6 && Math.abs(meY - posY) <= 6 ? (
+  return Math.abs(meX - posX) <= 10 && Math.abs(meY - posY) <= 6 ? (
     meX === posX && meY === posY ? (
       <div className="units pos" />
     ) : floorMap[meY][meX].cellType === 'wall' ? (
