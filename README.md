@@ -1,5 +1,3 @@
-# Dungeons Kings
+# Dungeon Kings
 
-A roguelike dungeon crawler.
-
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A roguelike dungeon crawler game bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
