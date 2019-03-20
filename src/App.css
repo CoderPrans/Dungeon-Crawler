@@ -93,7 +93,7 @@ body {
   margin: 10px;
 }
 .thug {
-  background: url(enemy.svg) #222 center center no-repeat;
+  background: url(enemy.png) #222 center center no-repeat;
   background-size: cover;
   border-color: #222;
 }
@@ -142,7 +142,7 @@ body {
   border-color: indianred;
 }
 .weapon3 {
-  background: url(sword.svg) dodgerblue center center no-repeat;
+  background: url(sword.png) dodgerblue center center no-repeat;
   border-color: dodgerblue;
   background-size: cover;
 }
