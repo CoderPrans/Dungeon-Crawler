@@ -1,14 +1,14 @@
 {
   "main.css": "/Dungeon-Crawler/static/css/main.7ff3b523.chunk.css",
-  "main.js": "/Dungeon-Crawler/static/js/main.7f572eff.chunk.js",
-  "main.js.map": "/Dungeon-Crawler/static/js/main.7f572eff.chunk.js.map",
-  "static/js/1.6224800a.chunk.js": "/Dungeon-Crawler/static/js/1.6224800a.chunk.js",
-  "static/js/1.6224800a.chunk.js.map": "/Dungeon-Crawler/static/js/1.6224800a.chunk.js.map",
+  "main.js": "/Dungeon-Crawler/static/js/main.6d14143e.chunk.js",
+  "main.js.map": "/Dungeon-Crawler/static/js/main.6d14143e.chunk.js.map",
+  "static/js/1.947ab1e0.chunk.js": "/Dungeon-Crawler/static/js/1.947ab1e0.chunk.js",
+  "static/js/1.947ab1e0.chunk.js.map": "/Dungeon-Crawler/static/js/1.947ab1e0.chunk.js.map",
   "runtime~main.js": "/Dungeon-Crawler/static/js/runtime~main.d01edacb.js",
   "runtime~main.js.map": "/Dungeon-Crawler/static/js/runtime~main.d01edacb.js.map",
-  "static/media/App.css": "/Dungeon-Crawler/static/media/hero.bd6df380.png",
+  "static/media/App.css": "/Dungeon-Crawler/static/media/brick-wall.2c37d3e0.png",
   "static/css/main.7ff3b523.chunk.css.map": "/Dungeon-Crawler/static/css/main.7ff3b523.chunk.css.map",
   "index.html": "/Dungeon-Crawler/index.html",
-  "precache-manifest.ad7cd8e509ac0af0dd9aadb11dee449a.js": "/Dungeon-Crawler/precache-manifest.ad7cd8e509ac0af0dd9aadb11dee449a.js",
+  "precache-manifest.9afaa082224a5cf279ba59f58e5978d8.js": "/Dungeon-Crawler/precache-manifest.9afaa082224a5cf279ba59f58e5978d8.js",
   "service-worker.js": "/Dungeon-Crawler/service-worker.js"
 }
