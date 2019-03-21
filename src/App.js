@@ -3,15 +3,15 @@ import './App.css';
 import DungeonGenerator from './Maps';
 
 const enemy = [
-  {hp: 50, attack: 15}, // color: purple, attack: 10
-  {hp: 75, attack: 45}, // color: brown, attack: 35
-  {hp: 100, attack: 60}, // color: blue, attack: 50
-  {hp: 150, attack: 80}, // color: black, attack: 80
+  {hp: 50, attack: 15},
+  {hp: 75, attack: 45},
+  {hp: 100, attack: 60},
+  {hp: 150, attack: 80},
 ];
 
 const weapon = [['Fist', 25], ['Hammer', 50], ['Sword', 80], ['Fire', 100]];
 
-var floorMap = DungeonGenerator.generate({
+let floorMap = DungeonGenerator.generate({
   maxRoomSize: 7,
   minRoomSize: 5,
   padding: 2,
@@ -20,7 +20,11 @@ var floorMap = DungeonGenerator.generate({
   cols: 30,
 });
 
-// TODO multi level enemy, program map algorithm
+// TODO make a custom alert system
+//  -> create a mssg monitor state variable
+//  -> create a component that shows the dialog mssg
+//  -> every time the mssg is not null its shown
+//  -> set a timeout to reset mssg to null
 
 let positions = new Array(50);
 let hpotions = new Array(50);
@@ -93,6 +97,7 @@ class App extends React.Component {
       enemyLevel: null,
       fightOn: false,
       gameWon: false,
+      mssg: null,
     };
     this.handleTravel = this.handleTravel.bind(this);
     this.detectEnemy = this.detectEnemy.bind(this);
@@ -139,9 +144,9 @@ class App extends React.Component {
 
     if (nextY + 1 <= 49 && positions[nextY + 1][nextX] !== 0) {
       if (positions[nextY + 1][nextX] === 3) {
-        alert('BOSSS FIGHT !!!!');
+        this.setState({mssg: 'BOSSS FIGHT !!!!'});
       }
-      alert('Enemy detected!, right');
+      this.setState({mssg: 'Enemy to the right'});
       this.setState({fightOn: true});
       return {
         enemyDir: 'right',
@@ -151,9 +156,9 @@ class App extends React.Component {
       };
     } else if (nextX + 1 <= 29 && positions[nextY][nextX + 1] !== 0) {
       if (positions[nextY][nextX + 1] === 3) {
-        alert('BOSSS FIGHT !!!!');
+        this.setState({mssg: 'BOSSS FIGHT !!!!'});
       }
-      alert('Enemy detected!, down');
+      this.setState({mssg: 'Enemy to the down'});
       this.setState({fightOn: true});
       return {
         enemyDir: 'down',
@@ -163,9 +168,9 @@ class App extends React.Component {
       };
     } else if (nextY - 1 >= 0 && positions[nextY - 1][nextX] !== 0) {
       if (positions[nextY - 1][nextX] === 3) {
-        alert('BOSSS FIGHT !!!!');
+        this.setState({mssg: 'BOSSS FIGHT !!!!'});
       }
-      alert('Enemy detected!, left');
+      this.setState({mssg: 'Enemy to the left'});
       this.setState({fightOn: true});
       return {
         enemyDir: 'left',
@@ -175,9 +180,9 @@ class App extends React.Component {
       };
     } else if (nextX - 1 >= 0 && positions[nextY][nextX - 1] !== 0) {
       if (positions[nextY][nextX - 1] === 3) {
-        alert('BOSSS FIGHT !!!!');
+        this.setState({mssg: 'BOSSS FIGHT !!!!'});
       }
-      alert('Enemy detected!, up');
+      this.setState({mssg: 'Enemy to the up'});
       this.setState({fightOn: true});
       return {
         enemyDir: 'up',
@@ -219,11 +224,13 @@ class App extends React.Component {
           let currHp = this.state.hp;
           if (hpotions[posY + 1][posX] === 1) {
             this.setState({hp: currHp += 65});
-            alert('potion collected');
+            this.setState({mssg: 'potion collected'});
           }
           if (weapons[posY + 1][posX] !== 0) {
             this.setState({weaponLevel: weapons[posY + 1][posX]});
-            alert(`picked a ${weapon[weapons[posY + 1][posX]][0]}`);
+            this.setState({
+              mssg: `picked a ${weapon[weapons[posY + 1][posX]][0]}`,
+            });
           }
           let clonedPotions = hpotions.slice(0);
           clonedPotions[posY + 1][posX] = 0;
@@ -257,11 +264,13 @@ class App extends React.Component {
           let currHp = this.state.hp;
           if (hpotions[posY][posX + 1] === 1) {
             this.setState({hp: currHp += 65});
-            alert('potion collected');
+            this.setState({mssg: 'potion collected'});
           }
           if (weapons[posY][posX + 1] !== 0) {
             this.setState({weaponLevel: weapons[posY][posX + 1]});
-            alert(`picked a ${weapon[weapons[posY][posX + 1]][0]}`);
+            this.setState({
+              mssg: `picked a ${weapon[weapons[posY][posX + 1]][0]}`,
+            });
           }
           let clonedPotions = hpotions.slice(0);
           clonedPotions[posY][posX + 1] = 0;
@@ -292,11 +301,13 @@ class App extends React.Component {
           let currHp = this.state.hp;
           if (hpotions[posY - 1][posX] === 1) {
             this.setState({hp: currHp += 65});
-            alert('potion collected');
+            this.setState({mssg: 'potion collected'});
           }
           if (weapons[posY - 1][posX] !== 0) {
             this.setState({weaponLevel: weapons[posY - 1][posX]});
-            alert(`picked a ${weapon[weapons[posY - 1][posX]][0]}`);
+            this.setState({
+              mssg: `picked a ${weapon[weapons[posY - 1][posX]][0]}`,
+            });
           }
           let clonedPotions = hpotions.slice(0);
           clonedPotions[posY - 1][posX] = 0;
@@ -327,11 +338,13 @@ class App extends React.Component {
           let currHp = this.state.hp;
           if (hpotions[posY][posX - 1] === 1) {
             this.setState({hp: currHp += 65});
-            alert('potion collected');
+            this.setState({mssg: 'potion collected'});
           }
           if (weapons[posY][posX - 1] !== 0) {
             this.setState({weaponLevel: weapons[posY][posX - 1]});
-            alert(`picked a ${weapon[weapons[posY][posX - 1]][0]}`);
+            this.setState({
+              mssg: `picked a ${weapon[weapons[posY][posX - 1]][0]}`,
+            });
           }
           let clonedPotions = hpotions.slice(0);
           clonedPotions[posY][posX - 1] = 0;
@@ -372,7 +385,7 @@ class App extends React.Component {
       if (enemyHp === 0) {
         // positions - the thug obliterated
         if (positions[posY + 1][posX] === 3) {
-          alert('Boss EXTERMINATED !!!');
+          this.setState({mssg: 'Boss EXTERMINATED !!!'});
           this.setState({gameWon: true});
         }
         let clonedArr = this.state.positions.slice(0);
@@ -394,7 +407,7 @@ class App extends React.Component {
       if (enemyHp === 0) {
         // positions - the thug obliterated
         if (positions[posY - 1][posX] === 3) {
-          alert('Boss EXTERMINATED !!!');
+          this.setState({mssg: 'Boss EXTERMINATED !!!'});
           this.setState({gameWon: true});
         }
         let clonedArr = this.state.positions.slice(0);
@@ -415,7 +428,7 @@ class App extends React.Component {
       if (enemyHp === 0) {
         // positions - the thug obliterated
         if (positions[posY][posX - 1] === 3) {
-          alert('Boss EXTERMINATED !!!');
+          this.setState({mssg: 'Boss EXTERMINATED !!!'});
           this.setState({gameWon: true});
         }
         let clonedArr = this.state.positions.slice(0);
@@ -436,7 +449,7 @@ class App extends React.Component {
       if (enemyHp === 0) {
         // positions - the thug obliterated
         if (positions[posY][posX + 1] === 3) {
-          alert('Boss EXTERMINATED !!!');
+          this.setState({mssg: 'Boss EXTERMINATED !!!'});
           this.setState({gameWon: true});
         }
         let clonedArr = this.state.positions.slice(0);
@@ -479,6 +492,11 @@ class App extends React.Component {
         );
       }
     }
+
+    if (this.state.mssg) {
+      setTimeout(() => this.setState({mssg: null}), 3000);
+    }
+
     return (
       <div>
         <h1
@@ -553,6 +571,14 @@ class App extends React.Component {
             &#8680;
           </button>
         </div>
+        <button
+          style={{position: 'absolute', top: '4', right: '200'}}
+          onClick={() =>
+            !this.state.mssg ? this.setState({mssg: 'A message'}) : null
+          }>
+          test button
+        </button>
+        <Dialog mssg={this.state.mssg} />
       </div>
     );
   }
@@ -583,6 +609,32 @@ const Units = props => {
   ) : (
     <div className="units" />
   );
+};
+
+const Dialog = props => {
+  if (props.mssg) {
+    return (
+      <div
+        style={{
+          position: 'absolute',
+          left: 0,
+          right: 0,
+          top: 0,
+          bottom: 170,
+          margin: 'auto',
+          width: '200px',
+          height: '88px',
+          background: 'rgb(255, 255, 255, 0.6)',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+        }}>
+        {props.mssg ? props.mssg : 'I have nothing'}
+      </div>
+    );
+  } else {
+    return null;
+  }
 };
 
 export default App;
