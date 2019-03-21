@@ -533,8 +533,8 @@ class App extends React.Component {
             className="container"
             style={{
               position: 'relative',
-              right: `${25 * (this.state.posY - 5)}px`,
-              bottom: `${25 * (this.state.posX - 5)}px`,
+              right: `${30 * (this.state.posY - 5)}px`,
+              bottom: `${30 * (this.state.posX - 5)}px`,
             }}>
             {units}
           </div>

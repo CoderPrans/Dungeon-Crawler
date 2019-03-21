@@ -2,8 +2,8 @@ body {
   background: #2d2d2d;
 }
 .units {
-  height: 23px;
-  width: 23px;
+  height: 28px;
+  width: 28px;
   background-color: #2d2d2d;
   border: 1px solid #2d2d2d;
   display: inline-block;
@@ -20,7 +20,7 @@ body {
   margin: 50px auto;
 }
 .container {
-  width: 1250px;
+  width: 1500px;
   line-height: 0;
 }
 
@@ -28,18 +28,20 @@ body {
   animation-name: blink;
   animation-duration: 0.4s;
   animation-iteration-count: infinite;
-  background: url(hero.png) slategray center center no-repeat;
+  background: url(hero.png) center center no-repeat;
   background-size: cover;
-  border-color: slategray;
+  border-color: #0062d3;
 }
 
 .brick {
-  background-color: firebrick;
-  border: 1px solid #a44;
+  background: url(brick-wall.png) center;
+  background-size: cover;
+  border: 1px solid #b22;
 }
 
 .visible {
-  background-color: #bbb;
+  background: url(path-tile.png) center;
+  background-size: cover;
   border: 1px solid #aaa;
 }
 
@@ -64,22 +66,22 @@ body {
 
 @keyframes blink {
   0% {
-    background-color: #eee;
+    background-color: #555;
   }
 
   100% {
-    background-color: slategray;
+    background-color: #222;
   }
 }
-@keyframes blinkblack {
-  0% {
-    background-color: lightgray;
-  }
+/* @keyframes blinkblack { */
+/*   0% { */
+/*     background-color: lightgray; */
+/*   } */
 
-  100% {
-    background-color: black;
-  }
-}
+/*   100% { */
+/*     background-color: black; */
+/*   } */
+/* } */
 .statsbar {
   display: inline-text;
   background: rgba(13, 13, 13, 0.4);
@@ -95,15 +97,15 @@ body {
 .thug {
   background: url(enemy.png) #222 center center no-repeat;
   background-size: cover;
-  border-color: #222;
+  border-color: coral;
 }
 .boss {
   animation-name: spin;
-  animation-duration: 0.5s;
+  animation-duration: 1s;
   animation-iteration-count: infinite;
-  background: url(boss.png) #bbb center center no-repeat;
+  background: url(boss.png) center center no-repeat;
   background-size: cover;
-  border-color: slategray;
+  border-color: #ff1c1c;
 }
 .actionbar {
   display: inline-text;
@@ -125,31 +127,31 @@ body {
 }
 @keyframes spin {
   0% {
-    transform: rotate(10deg);
+    transform: rotate(0deg);
   }
   100% {
     transform: rotate(360deg);
   }
 }
 .potion {
-  background: url(hp.png) #3e3 center center no-repeat;
+  background: url(hp.png) #bbb center;
   background-size: cover;
-  border-color: #3e3;
+  border-color: #2d2d2d;
 }
 .weapon2 {
   background: url(hammer.png) indianred center center no-repeat;
   background-size: cover;
-  border-color: indianred;
+  border-color: #2d2d2d;
 }
 .weapon3 {
   background: url(sword.png) dodgerblue center center no-repeat;
-  border-color: dodgerblue;
+  border-color: #2d2d2d;
   background-size: cover;
 }
 .weapon4 {
   background: url(fire.png) white center center no-repeat;
   background-size: cover;
-  border-color: white;
+  border-color: #2d2d2d;
 }
 .dialog {
   position: absolute;
