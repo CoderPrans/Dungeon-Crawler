@@ -571,13 +571,6 @@ class App extends React.Component {
             &#8680;
           </button>
         </div>
-        <button
-          style={{position: 'absolute', top: '4', right: '200'}}
-          onClick={() =>
-            !this.state.mssg ? this.setState({mssg: 'A message'}) : null
-          }>
-          test button
-        </button>
         <Dialog mssg={this.state.mssg} />
       </div>
     );
