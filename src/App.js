@@ -579,7 +579,7 @@ class App extends React.Component {
 
 const Units = props => {
   const {meX, meY, posX, posY, thugP, potionP, weaponL} = props;
-  return Math.abs(meX - posX) <= 10 && Math.abs(meY - posY) <= 6 ? (
+  return Math.abs(meX - posX) <= 8 && Math.abs(meY - posY) <= 6 ? (
     meX === posX && meY === posY ? (
       <div className="units pos" />
     ) : floorMap[meY][meX].cellType === 'wall' ? (
