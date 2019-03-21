@@ -14,7 +14,7 @@
 importScripts("https://storage.googleapis.com/workbox-cdn/releases/3.6.3/workbox-sw.js");
 
 importScripts(
-  "/Dungeon-Crawler/precache-manifest.b3135ad4d979e793ea19cd814505760f.js"
+  "/Dungeon-Crawler/precache-manifest.fe799199dae9b9e82d597e7ec14f389c.js"
 );
 
 workbox.clientsClaim();
