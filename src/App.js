@@ -1,26 +1,10 @@
 import React from 'react';
 import './App.css';
-import DungeonGenerator from './Maps';
-
-// data
-const enemy = [
-  {hp: 50, attack: 15},
-  {hp: 75, attack: 45},
-  {hp: 100, attack: 60},
-  {hp: 150, attack: 80},
-];
-
-// data
-const weapon = [['Fist', 25], ['Hammer', 50], ['Sword', 80], ['Fire', 100]];
-
-let floorMap = DungeonGenerator.generate({
-  maxRoomSize: 7,
-  minRoomSize: 5,
-  padding: 2,
-  rooms: 27,
-  rows: 50,
-  cols: 30,
-});
+import Dashboard from './components/Dashboard';
+import Dialog from './components/Dialog';
+import Units from './components/Units';
+import {enemy, weapon, thugCount, presence} from './utils/data';
+//import {useAlert} from 'react-alert';
 
 // TODO make a custom alert system
 //  -> create a mssg monitor state variable
@@ -28,61 +12,7 @@ let floorMap = DungeonGenerator.generate({
 //  -> every time the mssg is not null its shown
 //  -> set a timeout to reset mssg to null
 
-let positions = new Array(50); // put enemies
-let hpotions = new Array(50); // put potions
-
-let bossFilled = false;
-let enemyCount = 0;
-
-for (let i = 0; i < positions.length; i++) {
-  positions[i] = new Array(30).fill(0);
-  hpotions[i] = new Array(30).fill(0);
-
-  for (let j = 0; j < positions[i].length; j++) {
-    if (
-      i % 2 !== 0 &&
-      Math.random() < 0.03 &&
-      floorMap[i][j].cellType === 'empty'
-    ) {
-      positions[i][j] = 1; // filling enemy
-      enemyCount++;
-      if (i > 28 && !bossFilled) {
-        positions[i][j] = 3;
-        console.log(i, j);
-        bossFilled = true;
-      }
-    } else if (
-      Math.random() < 0.005 &&
-      floorMap[i][j].cellType === 'empty' &&
-      positions[i][j] === 0
-    ) {
-      hpotions[i][j] = 1; // filling potions
-    }
-  }
-}
-
-let weapons = new Array(50);
-
-for (let i = 0; i < weapons.length; i++) {
-  weapons[i] = new Array(30).fill(0);
-  for (let j = 0; j < weapons[i].length; j++) {
-    if (Math.random() < 0.01 && positions[i][j] === 0 && hpotions[i][j] === 0) {
-      if (Math.random() < 0.3) {
-        weapons[i][j] = 1; // filling weapons level1
-      } else if (Math.random() < 0.2) {
-        weapons[i][j] = 2; // filling weapons level2
-      } else if (Math.random() < 0.1) {
-        weapons[i][j] = 3; // filling weapons level3
-      }
-    }
-  }
-}
-
-console.log('positions', positions);
-console.log('weapons', weapons);
-console.log('floorMap', floorMap);
-
-class App extends React.Component {
+class Game extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
@@ -90,10 +20,8 @@ class App extends React.Component {
       posY: Math.round(Math.random() * 50),
       hp: 100,
       xp: 25,
-      positions,
-      hpotions,
-      weapons,
-      enemyCount,
+      presence,
+      thugCount,
       enemyDir: null,
       enemyHp: null,
       enemyAttack: null,
@@ -106,22 +34,27 @@ class App extends React.Component {
     this.handleTravel = this.handleTravel.bind(this);
     this.detectEnemy = this.detectEnemy.bind(this);
     this.handleCombat = this.handleCombat.bind(this);
+    this.emptyPresence = this.emptyPresence.bind(this);
+    this.updatePositions = this.updatePositions.bind(this);
   }
 
   componentDidMount() {
     document.addEventListener('keydown', e => {
       e.preventDefault();
       if (e.keyCode === 39) {
-        document.getElementById('Yplus').click();
+        document.getElementById('Yplus') &&
+          document.getElementById('Yplus').click();
       } else if (e.keyCode === 40) {
-        document.getElementById('Xplus').click();
+        document.getElementById('Xplus') &&
+          document.getElementById('Xplus').click();
       } else if (e.keyCode === 37) {
-        document.getElementById('Yminus').click();
+        document.getElementById('Yminus') &&
+          document.getElementById('Yminus').click();
       } else if (e.keyCode === 38) {
-        document.getElementById('Xminus').click();
+        document.getElementById('Xminus') &&
+          document.getElementById('Xminus').click();
       }
     });
-    this.setState({positions, hpotions});
     let posX;
     let posY;
     for (let i = 0; i < 30; i++) {
@@ -130,83 +63,94 @@ class App extends React.Component {
           Math.random() < 0.2 &&
           !posX &&
           !posY &&
-          floorMap[j][i].cellType === 'empty' &&
-          positions[i][j] === 0 &&
-          this.state.weapons[i][j] === 0 &&
-          hpotions[i][j] === 0
+          presence[j][i] === 'empty'
         ) {
           posX = i; // setting player x position (initial)
           posY = j; // setting player y position (initial)
         }
       }
     }
-    this.setState({posX, posY, enemyCount});
+    this.setState({posX, posY, thugCount});
   }
 
   // function to detect enemy
   detectEnemy(nextY, nextX) {
     // arguments next coordinates
-    let {positions} = this.state;
-
-    if (nextY + 1 <= 49 && positions[nextY + 1][nextX] !== 0) {
-      if (positions[nextY + 1][nextX] === 3) {
-        this.setState({mssg: 'BOSSS FIGHT !!!!'});
-      }
+    let {presence} = this.state;
+    if (presence[nextY + 1][nextX] === 'thug') {
+      //this.setState({mssg: 'BOSSS FIGHT !!!!'});
       this.setState({mssg: 'Enemy to the right'});
       this.setState({fightOn: true});
       return {
         enemyDir: 'right',
-        enemyLevel: positions[nextY + 1][nextX],
-        enemyHp: enemy[positions[nextY + 1][nextX]].hp,
-        enemyAttack: enemy[positions[nextY + 1][nextX]].attack,
+        enemyLevel: 1,
+        enemyHp: enemy[1].hp,
+        enemyAttack: enemy[1].attack,
       };
-    } else if (nextX + 1 <= 29 && positions[nextY][nextX + 1] !== 0) {
-      if (positions[nextY][nextX + 1] === 3) {
-        this.setState({mssg: 'BOSSS FIGHT !!!!'});
-      }
+    } else if (presence[nextY][nextX + 1] === 'thug') {
+      //this.setState({mssg: 'BOSSS FIGHT !!!!'});
       this.setState({mssg: 'Enemy to the down'});
       this.setState({fightOn: true});
       return {
         enemyDir: 'down',
-        enemyLevel: positions[nextY][nextX + 1],
-        enemyHp: enemy[positions[nextY][nextX + 1]].hp,
-        enemyAttack: enemy[positions[nextY][nextX + 1]].attack,
+        enemyLevel: 1,
+        enemyHp: enemy[1].hp,
+        enemyAttack: enemy[1].attack,
       };
-    } else if (nextY - 1 >= 0 && positions[nextY - 1][nextX] !== 0) {
-      if (positions[nextY - 1][nextX] === 3) {
-        this.setState({mssg: 'BOSSS FIGHT !!!!'});
-      }
+    } else if (presence[nextY - 1][nextX] === 'thug') {
       this.setState({mssg: 'Enemy to the left'});
       this.setState({fightOn: true});
       return {
         enemyDir: 'left',
-        enemyLevel: positions[nextY - 1][nextX],
-        enemyHp: enemy[positions[nextY - 1][nextX]].hp,
-        enemyAttack: enemy[positions[nextY - 1][nextX]].attack,
+        enemyLevel: 1,
+        enemyHp: enemy[1].hp,
+        enemyAttack: enemy[1].attack,
       };
-    } else if (nextX - 1 >= 0 && positions[nextY][nextX - 1] !== 0) {
-      if (positions[nextY][nextX - 1] === 3) {
-        this.setState({mssg: 'BOSSS FIGHT !!!!'});
-      }
+    } else if (presence[nextY][nextX - 1] === 'thug') {
       this.setState({mssg: 'Enemy to the up'});
       this.setState({fightOn: true});
       return {
         enemyDir: 'up',
-        enemyLevel: positions[nextY][nextX - 1],
-        enemyHp: enemy[positions[nextY][nextX - 1]].hp,
-        enemyAttack: enemy[positions[nextY][nextX - 1]].attack,
+        enemyLevel: 1,
+        enemyHp: enemy[1].hp,
+        enemyAttack: enemy[1].attack,
       };
     }
-    console.log('from inside the detectEnemy', this.state.fightOn);
     return 'clear';
+  }
+
+  emptyPresence(x, y) {
+    let presenceCopy = presence.slice(0);
+    presenceCopy[x][y] = 'empty';
+    this.setState({presence: presenceCopy});
+  }
+
+  updatePositions(x, y) {
+    let posit = this.state.presence[x][y];
+    if (typeof this.detectEnemy(x, y) === 'object') {
+      let {enemyDir, enemyLevel, enemyAttack, enemyHp} = this.detectEnemy(x, y);
+      this.setState({enemyDir, enemyLevel, enemyAttack, enemyHp});
+    } else {
+      this.setState({fightOn: false});
+    }
+    let currHp = this.state.hp;
+    if (posit === 'pot') {
+      this.setState({hp: currHp += 65});
+      this.setState({mssg: 'potion collected'});
+      this.emptyPresence(x, y);
+    } else if (posit[0] === 'w' && posit !== 'wall') {
+      this.setState({weaponLevel: parseInt(posit[1])});
+      this.setState({
+        mssg: `picked a ${weapon[parseInt(posit[1])][0]}`,
+      });
+      this.emptyPresence(x, y);
+    }
   }
 
   // handle a travel command and detect enemy
   handleTravel(e) {
     e.preventDefault();
-
-    let {positions, hpotions, weapons} = this.state;
-
+    // let {positions, hpotions, weapons} = this.state;
     if (
       this.state.enemyDir === null &&
       !this.state.gameWon &&
@@ -216,151 +160,49 @@ class App extends React.Component {
       if (e.target.id === 'Yplus') {
         if (
           posY < 49 &&
-          floorMap[posY + 1][posX].cellType === 'empty' &&
-          positions[posY + 1][posX] === 0
+          presence[posY + 1][posX] !== 'thug' &&
+          presence[posY + 1][posX] !== 'boss' &&
+          presence[posY + 1][posX] !== 'wall'
         ) {
-          if (typeof this.detectEnemy(posY + 1, posX) === 'object') {
-            let {enemyDir, enemyLevel, enemyAttack, enemyHp} = this.detectEnemy(
-              posY + 1,
-              posX,
-            );
-            this.setState({enemyDir, enemyLevel, enemyAttack, enemyHp});
-          } else {
-            this.setState({fightOn: false});
-          }
-          let currHp = this.state.hp;
-          if (hpotions[posY + 1][posX] === 1) {
-            this.setState({hp: currHp += 65});
-            this.setState({mssg: 'potion collected'});
-          }
-          if (weapons[posY + 1][posX] !== 0) {
-            this.setState({weaponLevel: weapons[posY + 1][posX]});
-            this.setState({
-              mssg: `picked a ${weapon[weapons[posY + 1][posX]][0]}`,
-            });
-          }
-          let clonedPotions = hpotions.slice(0);
-          clonedPotions[posY + 1][posX] = 0;
-          let clonedWeapons = weapons.slice(0);
-          clonedWeapons[posY + 1][posX] = 0;
+          this.updatePositions(posY + 1, posX);
           this.setState({
             posY: posY + 1,
-            hpotions: clonedPotions,
-            weapons: clonedWeapons,
           });
-          // document.querySelector('.container').style.left = `${parseInt(
-          //   document.querySelector('.container').style.left.split('p')[0],
-          // ) + 20}px`;
         }
       } else if (e.target.id === 'Xplus') {
         if (
           posX < 29 &&
-          floorMap[posY][posX + 1].cellType === 'empty' &&
-          positions[posY][posX + 1] === 0
+          presence[posY][posX + 1] !== 'thug' &&
+          presence[posY][posX + 1] !== 'boss' &&
+          presence[posY][posX + 1] !== 'wall'
         ) {
-          if (typeof this.detectEnemy(posY, posX + 1) === 'object') {
-            let {enemyDir, enemyLevel, enemyAttack, enemyHp} = this.detectEnemy(
-              posY,
-              posX + 1,
-            );
-            this.setState({enemyDir, enemyLevel, enemyAttack, enemyHp});
-          } else {
-            this.setState({fightOn: false});
-          }
-
-          let currHp = this.state.hp;
-          if (hpotions[posY][posX + 1] === 1) {
-            this.setState({hp: currHp += 65});
-            this.setState({mssg: 'potion collected'});
-          }
-          if (weapons[posY][posX + 1] !== 0) {
-            this.setState({weaponLevel: weapons[posY][posX + 1]});
-            this.setState({
-              mssg: `picked a ${weapon[weapons[posY][posX + 1]][0]}`,
-            });
-          }
-          let clonedPotions = hpotions.slice(0);
-          clonedPotions[posY][posX + 1] = 0;
-          let clonedWeapons = weapons.slice(0);
-          clonedWeapons[posY][posX + 1] = 0;
+          this.updatePositions(posY, posX + 1);
           this.setState({
             posX: posX + 1,
-            hpotions: clonedPotions,
-            weapons: clonedWeapons,
           });
         }
       } else if (e.target.id === 'Yminus') {
         if (
           posY > 0 &&
-          floorMap[posY - 1][posX].cellType === 'empty' &&
-          positions[posY - 1][posX] === 0
+          presence[posY - 1][posX] !== 'thug' &&
+          presence[posY - 1][posX] !== 'boss' &&
+          presence[posY - 1][posX] !== 'wall'
         ) {
-          if (typeof this.detectEnemy(posY - 1, posX) === 'object') {
-            let {enemyDir, enemyLevel, enemyAttack, enemyHp} = this.detectEnemy(
-              posY - 1,
-              posX,
-            );
-            this.setState({enemyDir, enemyLevel, enemyAttack, enemyHp});
-          } else {
-            this.setState({fightOn: false});
-          }
-
-          let currHp = this.state.hp;
-          if (hpotions[posY - 1][posX] === 1) {
-            this.setState({hp: currHp += 65});
-            this.setState({mssg: 'potion collected'});
-          }
-          if (weapons[posY - 1][posX] !== 0) {
-            this.setState({weaponLevel: weapons[posY - 1][posX]});
-            this.setState({
-              mssg: `picked a ${weapon[weapons[posY - 1][posX]][0]}`,
-            });
-          }
-          let clonedPotions = hpotions.slice(0);
-          clonedPotions[posY - 1][posX] = 0;
-          let clonedWeapons = weapons.slice(0);
-          clonedWeapons[posY - 1][posX] = 0;
+          this.updatePositions(posY - 1, posX);
           this.setState({
             posY: posY - 1,
-            hpotions: clonedPotions,
-            weapons: clonedWeapons,
           });
         }
       } else {
         if (
           posX > 0 &&
-          floorMap[posY][posX - 1].cellType === 'empty' &&
-          positions[posY][posX - 1] === 0
+          presence[posY][posX - 1] !== 'thug' &&
+          presence[posY][posX - 1] !== 'boss' &&
+          presence[posY][posX - 1] !== 'wall'
         ) {
-          if (typeof this.detectEnemy(posY, posX - 1) === 'object') {
-            let {enemyDir, enemyLevel, enemyAttack, enemyHp} = this.detectEnemy(
-              posY,
-              posX - 1,
-            );
-            this.setState({enemyDir, enemyLevel, enemyAttack, enemyHp});
-          } else {
-            this.setState({fightOn: false});
-          }
-
-          let currHp = this.state.hp;
-          if (hpotions[posY][posX - 1] === 1) {
-            this.setState({hp: currHp += 65});
-            this.setState({mssg: 'potion collected'});
-          }
-          if (weapons[posY][posX - 1] !== 0) {
-            this.setState({weaponLevel: weapons[posY][posX - 1]});
-            this.setState({
-              mssg: `picked a ${weapon[weapons[posY][posX - 1]][0]}`,
-            });
-          }
-          let clonedPotions = hpotions.slice(0);
-          clonedPotions[posY][posX - 1] = 0;
-          let clonedWeapons = weapons.slice(0);
-          clonedWeapons[posY][posX - 1] = 0;
+          this.updatePositions(posY, posX - 1);
           this.setState({
             posX: posX - 1,
-            hpotions: clonedPotions,
-            weapons: clonedWeapons,
           });
         }
       }
@@ -379,7 +221,7 @@ class App extends React.Component {
         enemyDir,
         enemyHp,
         enemyAttack,
-        enemyCount,
+        thugCount,
         posY,
         posX,
       } = this.state,
@@ -391,14 +233,12 @@ class App extends React.Component {
       hp = hp - enemyAttack >= 0 ? hp - enemyAttack : 0;
       xp += 5 * enemyLevel;
       if (enemyHp === 0) {
-        // positions - the thug obliterated
-        if (positions[posY + 1][posX] === 3) {
-          this.setState({mssg: 'Boss EXTERMINATED !!!'});
-          this.setState({gameWon: true});
-        }
-        let clonedArr = this.state.positions.slice(0);
-        clonedArr[posY + 1][posX] = 0;
-        this.setState({positions: clonedArr, enemyCount: enemyCount - 1});
+        // if (presence[posY + 1][posX] === 3) {
+        //   this.setState({mssg: 'Boss EXTERMINATED !!!'});
+        //   this.setState({gameWon: true});
+        // }
+        this.emptyPresence(posY + 1, posX);
+        this.setState({thugCount: thugCount - 1});
         this.setState({
           enemyDir: null,
           enemyHp: null,
@@ -413,14 +253,12 @@ class App extends React.Component {
       hp = hp - enemyAttack >= 0 ? hp - enemyAttack : 0;
       xp += 5 * enemyLevel;
       if (enemyHp === 0) {
-        // positions - the thug obliterated
-        if (positions[posY - 1][posX] === 3) {
-          this.setState({mssg: 'Boss EXTERMINATED !!!'});
-          this.setState({gameWon: true});
-        }
-        let clonedArr = this.state.positions.slice(0);
-        clonedArr[posY - 1][posX] = 0;
-        this.setState({positions: clonedArr, enemyCount: enemyCount - 1});
+        // if (positions[posY - 1][posX] === 3) {
+        //   this.setState({mssg: 'Boss EXTERMINATED !!!'});
+        //   this.setState({gameWon: true});
+        // }
+        this.emptyPresence(posY - 1, posX);
+        this.setState({thugCount: thugCount - 1});
         this.setState({
           enemyDir: null,
           enemyHp: null,
@@ -434,14 +272,12 @@ class App extends React.Component {
       hp = hp - enemyAttack >= 0 ? hp - enemyAttack : 0;
       xp += 5 * enemyLevel;
       if (enemyHp === 0) {
-        // positions - the thug obliterated
-        if (positions[posY][posX - 1] === 3) {
-          this.setState({mssg: 'Boss EXTERMINATED !!!'});
-          this.setState({gameWon: true});
-        }
-        let clonedArr = this.state.positions.slice(0);
-        clonedArr[posY][posX - 1] = 0;
-        this.setState({positions: clonedArr, enemyCount: enemyCount - 1});
+        // if (positions[posY][posX - 1] === 3) {
+        //   this.setState({mssg: 'Boss EXTERMINATED !!!'});
+        //   this.setState({gameWon: true});
+        // }
+        this.emptyPresence(posY, posX - 1);
+        this.setState({thugCount: thugCount - 1});
         this.setState({
           enemyDir: null,
           enemyHp: null,
@@ -455,14 +291,12 @@ class App extends React.Component {
       hp = hp - enemyAttack >= 0 ? hp - enemyAttack : 0;
       xp += 5 * enemyLevel;
       if (enemyHp === 0) {
-        // positions - the thug obliterated
-        if (positions[posY][posX + 1] === 3) {
-          this.setState({mssg: 'Boss EXTERMINATED !!!'});
-          this.setState({gameWon: true});
-        }
-        let clonedArr = this.state.positions.slice(0);
-        clonedArr[posY][posX + 1] = 0;
-        this.setState({positions: clonedArr, enemyCount: enemyCount - 1});
+        // if (positions[posY][posX + 1] === 3) {
+        //   this.setState({mssg: 'Boss EXTERMINATED !!!'});
+        //   this.setState({gameWon: true});
+        // }
+        this.emptyPresence(posY, posX + 1);
+        this.setState({thugCount: thugCount - 1});
         this.setState({
           enemyDir: null,
           enemyHp: null,
@@ -476,166 +310,121 @@ class App extends React.Component {
 
   render() {
     if (this.state.hp === 0) {
-      alert('Game Over');
+      //alert('Game Over');
+      return <GameOver res="You Lost !!" />;
     } else if (this.state.gameWon === true) {
-      alert('YOU WON !!!!!!');
-    }
-    let {posX, posY, positions, hpotions, weapons} = this.state;
-    let units = [];
-    for (let i = 0; i < 30; i++) {
-      for (let j = 0; j < 50; j++) {
-        let thugPresence = positions[j][i];
-        let potionPresence = hpotions[j][i];
-        let weaponL = weapons[j][i];
-        units.push(
-          <Units
-            meX={i}
-            meY={j}
-            posX={posX}
-            posY={posY}
-            thugP={thugPresence}
-            potionP={potionPresence}
-            weaponL={weaponL}
-          />,
-        );
+      return <GameOver res="YOU WON !!!!!" />;
+    } else {
+      let {posX, posY} = this.state;
+      let units = [];
+      for (let i = 0; i < 30; i++) {
+        for (let j = 0; j < 50; j++) {
+          units.push(
+            <Units
+              meX={i}
+              meY={j}
+              posX={posX}
+              posY={posY}
+              presence={this.state.presence[j][i]}
+            />,
+          );
+        }
       }
-    }
 
-    if (this.state.mssg) {
-      setTimeout(() => this.setState({mssg: null}), 3000);
-    }
-
-    return (
-      <div>
-        <h1
-          style={{
-            color: 'gainsboro',
-            textAlign: 'center',
-            margin: '0',
-            padding: '3px',
-          }}>
-          Dungeon Kings
-        </h1>
-        <div className="display-section">
-          <div className="statsbar">
-            <span>
-              <span style={{fontSize: '13px'}}>HP</span>
-              {this.state.hp}
-            </span>
-            <span>
-              <span style={{fontSize: '13px'}}>XP</span>
-              {this.state.xp}
-            </span>
-            <span>
-              <span style={{fontSize: '13px'}}>Attack</span>
-              {weapon[this.state.weaponLevel][1]}
-            </span>
-            <span
-              style={{color: 'coral', fontWeight: 'bold', paddingTop: '30px'}}>
-              {this.state.enemyCount}
-            </span>
-          </div>
-          <div className="actionbar">
-            {this.state.enemyLevel ? (
-              <div>
-                <span>
-                  <span style={{fontSize: '13px'}}>L</span>
-                  {this.state.enemyLevel}
-                </span>
-                <span>
-                  <span style={{fontSize: '13px'}}>HP</span>
-                  {this.state.enemyHp}{' '}
-                </span>
-                <span>
-                  <span style={{fontSize: '13px'}}>Attack</span>
-                  {this.state.enemyAttack}{' '}
-                </span>
-              </div>
-            ) : null}
-          </div>
-        </div>
-        <div className="container-wrapper">
-          <div
-            className="container"
+      if (this.state.mssg) {
+        setTimeout(() => this.setState({mssg: null}), 3000);
+      }
+      return (
+        <div>
+          <h1
             style={{
-              position: 'relative',
-              right: `${30 * (this.state.posY - 5)}px`,
-              bottom: `${30 * (this.state.posX - 5)}px`,
+              color: 'gainsboro',
+              textAlign: 'center',
+              margin: '0',
+              padding: '3px',
             }}>
-            {units}
+            Dungeon Kings
+          </h1>
+          <Dashboard {...this.state} />
+          <div className="container-wrapper">
+            <div
+              className="container"
+              style={{
+                position: 'relative',
+                right: `${30 * (this.state.posY - 5)}px`,
+                bottom: `${30 * (this.state.posX - 5)}px`,
+              }}>
+              {units}
+            </div>
           </div>
+          <div className="navigation">
+            <button
+              id="Yminus"
+              className="dirButton"
+              onClick={this.handleTravel}>
+              &#8678;
+            </button>
+            <button
+              id="Xminus"
+              className="dirButton"
+              onClick={this.handleTravel}>
+              &#8679;
+            </button>
+            <button
+              id="Xplus"
+              className="dirButton"
+              onClick={this.handleTravel}>
+              &#8681;
+            </button>
+            <button
+              id="Yplus"
+              className="dirButton"
+              onClick={this.handleTravel}>
+              &#8680;
+            </button>
+          </div>
+          <Dialog mssg={this.state.mssg} />
         </div>
-        <div className="navigation">
-          <button id="Yminus" className="dirButton" onClick={this.handleTravel}>
-            &#8678;
-          </button>
-          <button id="Xminus" className="dirButton" onClick={this.handleTravel}>
-            &#8679;
-          </button>
-          <button id="Xplus" className="dirButton" onClick={this.handleTravel}>
-            &#8681;
-          </button>
-          <button id="Yplus" className="dirButton" onClick={this.handleTravel}>
-            &#8680;
-          </button>
-        </div>
-        <Dialog mssg={this.state.mssg} />
-      </div>
-    );
+      );
+    }
+    //let {hp, xp, weaponLevel, enemyHp, enemyLevel, enemyAttack} = this.state;
   }
 }
 
-const Units = props => {
-  const {meX, meY, posX, posY, thugP, potionP, weaponL} = props;
-  return Math.abs(meX - posX) <= 8 && Math.abs(meY - posY) <= 6 ? (
-    meX === posX && meY === posY ? (
-      <div className="units pos" />
-    ) : floorMap[meY][meX].cellType === 'wall' ? (
-      <div className="units brick" />
-    ) : thugP === 3 ? (
-      <div className="units boss" />
-    ) : thugP === 1 ? (
-      <div className="units thug" />
-    ) : potionP ? (
-      <div className="units potion" />
-    ) : weaponL === 1 ? (
-      <div className="units weapon2" />
-    ) : weaponL === 2 ? (
-      <div className="units weapon3" />
-    ) : weaponL === 3 ? (
-      <div className="units weapon4" />
-    ) : (
-      <div className="units visible" />
-    )
-  ) : (
-    <div className="units" />
-  );
-};
-
-const Dialog = props => {
-  if (props.mssg) {
-    return (
-      <div
+const GameOver = ({res}) => (
+  <div
+    style={{
+      height: '100vh',
+      background: '#232323',
+      width: '100vw',
+      display: 'flex',
+      justifyContent: 'center',
+      alignItems: 'center',
+    }}>
+    <div
+      style={{
+        width: '250px',
+        border: '4px solid #211',
+        padding: '20px',
+        background: '#eff',
+        textAlign: 'center',
+      }}>
+      <h3>Game Over</h3>
+      <h1>{res}</h1>
+      <button
         style={{
-          position: 'absolute',
-          left: 0,
-          right: 0,
-          top: 0,
-          bottom: 170,
-          margin: 'auto',
-          width: '200px',
-          height: '88px',
-          background: 'rgb(255, 255, 255, 0.6)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}>
-        {props.mssg ? props.mssg : 'I have nothing'}
-      </div>
-    );
-  } else {
-    return null;
-  }
-};
+          background: 'dodgerblue',
+          color: 'white',
+          padding: '7px 10px',
+          border: 'none',
+          cursor: 'pointer',
+          borderRadius: '2px',
+        }}
+        onClick={() => window.location.reload()}>
+        Restart
+      </button>
+    </div>
+  </div>
+);
 
-export default App;
+export default Game;
