@@ -2,6 +2,7 @@ import React from 'react';
 import './App.css';
 import DungeonGenerator from './Maps';
 
+// data
 const enemy = [
   {hp: 50, attack: 15},
   {hp: 75, attack: 45},
@@ -9,6 +10,7 @@ const enemy = [
   {hp: 150, attack: 80},
 ];
 
+// data
 const weapon = [['Fist', 25], ['Hammer', 50], ['Sword', 80], ['Fire', 100]];
 
 let floorMap = DungeonGenerator.generate({
@@ -26,21 +28,23 @@ let floorMap = DungeonGenerator.generate({
 //  -> every time the mssg is not null its shown
 //  -> set a timeout to reset mssg to null
 
-let positions = new Array(50);
-let hpotions = new Array(50);
+let positions = new Array(50); // put enemies
+let hpotions = new Array(50); // put potions
 
 let bossFilled = false;
 let enemyCount = 0;
+
 for (let i = 0; i < positions.length; i++) {
   positions[i] = new Array(30).fill(0);
   hpotions[i] = new Array(30).fill(0);
+
   for (let j = 0; j < positions[i].length; j++) {
     if (
       i % 2 !== 0 &&
       Math.random() < 0.03 &&
       floorMap[i][j].cellType === 'empty'
     ) {
-      positions[i][j] = 1;
+      positions[i][j] = 1; // filling enemy
       enemyCount++;
       if (i > 28 && !bossFilled) {
         positions[i][j] = 3;
@@ -52,7 +56,7 @@ for (let i = 0; i < positions.length; i++) {
       floorMap[i][j].cellType === 'empty' &&
       positions[i][j] === 0
     ) {
-      hpotions[i][j] = 1;
+      hpotions[i][j] = 1; // filling potions
     }
   }
 }
@@ -64,19 +68,19 @@ for (let i = 0; i < weapons.length; i++) {
   for (let j = 0; j < weapons[i].length; j++) {
     if (Math.random() < 0.01 && positions[i][j] === 0 && hpotions[i][j] === 0) {
       if (Math.random() < 0.3) {
-        weapons[i][j] = 1;
+        weapons[i][j] = 1; // filling weapons level1
       } else if (Math.random() < 0.2) {
-        weapons[i][j] = 2;
+        weapons[i][j] = 2; // filling weapons level2
       } else if (Math.random() < 0.1) {
-        weapons[i][j] = 3;
+        weapons[i][j] = 3; // filling weapons level3
       }
     }
   }
 }
 
-console.log(positions);
-//console.log(weapons);
-console.log(floorMap);
+console.log('positions', positions);
+console.log('weapons', weapons);
+console.log('floorMap', floorMap);
 
 class App extends React.Component {
   constructor(props) {
@@ -131,15 +135,17 @@ class App extends React.Component {
           this.state.weapons[i][j] === 0 &&
           hpotions[i][j] === 0
         ) {
-          posX = i;
-          posY = j;
+          posX = i; // setting player x position (initial)
+          posY = j; // setting player y position (initial)
         }
       }
     }
     this.setState({posX, posY, enemyCount});
   }
 
+  // function to detect enemy
   detectEnemy(nextY, nextX) {
+    // arguments next coordinates
     let {positions} = this.state;
 
     if (nextY + 1 <= 49 && positions[nextY + 1][nextX] !== 0) {
@@ -195,6 +201,7 @@ class App extends React.Component {
     return 'clear';
   }
 
+  // handle a travel command and detect enemy
   handleTravel(e) {
     e.preventDefault();
 
@@ -362,6 +369,7 @@ class App extends React.Component {
     }
   }
 
+  // enemy found handle combat
   handleCombat(e) {
     let {
         hp,
