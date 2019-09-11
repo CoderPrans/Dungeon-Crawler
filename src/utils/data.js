@@ -7,7 +7,7 @@ const enemy = [
   {hp: 150, attack: 80},
 ];
 
-const weapon = [['Fist', 25], ['Hammer', 50], ['Sword', 80], ['Fire', 100]];
+const weapon = [['Fist', 25], ['Hammer', 75], ['Sword', 100], ['Fire', 120]];
 
 let floorMap = DungeonGenerator.generate({
   maxRoomSize: 7,
@@ -36,16 +36,14 @@ presence.forEach((rows, i_r) => {
       floorMap[i_r][i_c].cellType === 'empty'
         ? rando > 0.01 && rando < 0.03
           ? ((thugCount += 1), (bossIs = true), bossIs ? 'thug' : 'boss')
-          : rando < 0.005 && rando > 0.001
+          : rando > 0.006 && rando < 0.01
           ? 'pot'
-          : rando > 0.04 && rando < 0.07
-          ? rando < 0.05 && rando > 0.04
-            ? 'w1'
-            : rando < 0.06 && rando > 0.05
-            ? 'w2'
-            : rando < 0.07 && rando > 0.06
-            ? 'w3'
-            : null
+          : rando > 0.001 && rando < 0.003
+          ? 'w1'
+          : rando > 0.003 && rando < 0.005
+          ? 'w2'
+          : rando > 0.005 && rando < 0.0059
+          ? 'w3'
           : 'empty'
         : floorMap[i_r][i_c].cellType;
   });

@@ -9,7 +9,7 @@ const Dialog = props => {
           left: 0,
           right: 0,
           top: 0,
-          bottom: 170,
+          bottom: 270,
           margin: 'auto',
           width: '200px',
           height: '88px',

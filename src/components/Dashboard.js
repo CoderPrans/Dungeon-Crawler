@@ -1,5 +1,9 @@
 import React from 'react';
 import {weapon} from '../utils/data';
+import Health from '../icons/hp.png';
+import Hammer from '../icons/hammer.png';
+import Fire from '../icons/fire.png';
+import Sword from '../icons/sword.png';
 
 const Dashboard = ({
   hp,
@@ -13,20 +17,18 @@ const Dashboard = ({
   <div className="display-section">
     <div className="statsbar">
       <span>
-        <span style={{fontSize: '13px'}}>HP</span>
+        <img alt="health-icon" src={Health} />
         {hp}
       </span>
       <span>
-        <span style={{fontSize: '13px'}}>XP</span>
+        <img alt="health-icon" src={Health} />
         {xp}
       </span>
       <span>
-        <span style={{fontSize: '13px'}}>Attack</span>
+        <img alt="health-icon" src={Health} />
         {weapon[weaponLevel][1]}
       </span>
-      <span style={{color: 'coral', fontWeight: 'bold', paddingTop: '30px'}}>
-        {thugCount}
-      </span>
+      <span style={{color: 'red', fontWeight: 'bold'}}>{thugCount}</span>
     </div>
     <div className="actionbar">
       {enemyLevel !== null ? (

@@ -312,7 +312,7 @@ class Game extends React.Component {
     if (this.state.hp === 0) {
       //alert('Game Over');
       return <GameOver res="You Lost !!" />;
-    } else if (this.state.gameWon === true) {
+    } else if (this.state.enemyCount === 0) {
       return <GameOver res="YOU WON !!!!!" />;
     } else {
       let {posX, posY} = this.state;
@@ -360,28 +360,24 @@ class Game extends React.Component {
           <div className="navigation">
             <button
               id="Yminus"
-              className="dirButton"
-              onClick={this.handleTravel}>
-              &#8678;
-            </button>
+              className="dirButton fa fa-arrow-circle-left"
+              onClick={this.handleTravel}
+            />
             <button
               id="Xminus"
-              className="dirButton"
-              onClick={this.handleTravel}>
-              &#8679;
-            </button>
+              className="dirButton fa fa-arrow-circle-up"
+              onClick={this.handleTravel}
+            />
             <button
               id="Xplus"
-              className="dirButton"
-              onClick={this.handleTravel}>
-              &#8681;
-            </button>
+              className="dirButton fa fa-arrow-circle-down"
+              onClick={this.handleTravel}
+            />
             <button
               id="Yplus"
-              className="dirButton"
-              onClick={this.handleTravel}>
-              &#8680;
-            </button>
+              className="dirButton fa fa-arrow-circle-right"
+              onClick={this.handleTravel}
+            />
           </div>
           <Dialog mssg={this.state.mssg} />
         </div>
