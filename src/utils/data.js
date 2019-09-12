@@ -1,13 +1,13 @@
 import DungeonGenerator from './Maps';
 
 const enemy = [
-  {hp: 50, attack: 15},
-  {hp: 75, attack: 45},
-  {hp: 100, attack: 60},
-  {hp: 150, attack: 80},
+  {hp: 100, attack: 45},
+  {hp: 100, attack: 75},
+  {hp: 100, attack: 90},
+  {hp: 100, attack: 100},
 ];
 
-const weapon = [['Fist', 25], ['Hammer', 75], ['Sword', 100], ['Fire', 120]];
+const weapon = [['Punch', 45], ['Hammer', 65], ['Sword', 80], ['Fire', 100]];
 
 let floorMap = DungeonGenerator.generate({
   maxRoomSize: 7,
@@ -33,7 +33,9 @@ presence.forEach((rows, i_r) => {
   rows.forEach((cols, i_c) => {
     let rando = Math.random();
     presence[i_r][i_c] =
-      floorMap[i_r][i_c].cellType === 'empty'
+      floorMap[i_r][i_c].cellType === 'empty' &&
+      i_r % 1.2 !== 0 &&
+      i_c % 2 === 0
         ? rando > 0.01 && rando < 0.03
           ? ((thugCount += 1), (bossIs = true), bossIs ? 'thug' : 'boss')
           : rando > 0.006 && rando < 0.01
