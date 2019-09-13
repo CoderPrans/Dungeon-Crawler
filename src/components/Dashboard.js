@@ -45,8 +45,6 @@ const Dashboard = ({
     <div className="actionbar">
       <span style={{color: 'red', fontWeight: 'bold', margin: '0 10px'}}>
         {thugCount}
-        <img alt="weapon-icon" src={Enemy} />
-        {enemyHp}
       </span>
       {
         // {enemyLevel !== null ? (

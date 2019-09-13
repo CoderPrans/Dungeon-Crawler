@@ -27,7 +27,7 @@ let floorMap = DungeonGenerator.generate({
 
 let presence = new Array(50).fill().map(i => new Array(30).fill(0));
 let thugCount = 0;
-let bossIs = false;
+//let bossIs = false;
 
 presence.forEach((rows, i_r) => {
   rows.forEach((cols, i_c) => {
@@ -37,7 +37,9 @@ presence.forEach((rows, i_r) => {
       i_r % 1.2 !== 0 &&
       i_c % 2 === 0
         ? rando > 0.01 && rando < 0.03
-          ? ((thugCount += 1), (bossIs = true), bossIs ? 'thug' : 'boss')
+          ? ((thugCount += 1), 'thug1')
+          : rando > 0.03 && rando < 0.04
+          ? ((thugCount += 1), 'thug2')
           : rando > 0.006 && rando < 0.01
           ? 'pot'
           : rando > 0.001 && rando < 0.003

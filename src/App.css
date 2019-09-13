@@ -114,6 +114,10 @@ body {
   background: url(icons/enemy.png) #222 center center no-repeat;
   background-size: contain;
 }
+.thug2 {
+  background: url(icons/ememy-2.png) #222 center center no-repeat;
+  background-size: contain;
+}
 .boss {
   animation-name: spin;
   animation-duration: 1s;

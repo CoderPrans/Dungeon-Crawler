@@ -9,8 +9,10 @@ const Units = props => {
     <div className="units brick" />
   ) : presence === 'boss' ? (
     <div className="units boss" />
-  ) : presence === 'thug' ? (
+  ) : presence === 'thug1' ? (
     <div className="units thug" />
+  ) : presence === 'thug2' ? (
+    <div className="units thug2" />
   ) : presence === 'pot' ? (
     <div className="units potion" />
   ) : presence === 'w1' ? ( // weaponL === 'w1'

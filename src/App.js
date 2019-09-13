@@ -1,4 +1,4 @@
-import React, {useState, useEffect} from 'react';
+import React from 'react';
 import './App.css';
 import Dashboard from './components/Dashboard';
 import Dialog from './components/Dialog';
@@ -6,7 +6,9 @@ import Units from './components/Units';
 import Navigation from './components/Navigation';
 import GameOver from './components/GameOver';
 import {enemy, weapon, thugCount, presence} from './utils/data';
-import FightBegin from './sounds/fight-begin.mp3';
+import Fight1 from './sounds/punch-attack.mp3';
+import Fight2 from './sounds/fight-begin.mp3';
+import Fight3 from './sounds/fire-attack.mp3';
 import Dying from './sounds/dying.mp3';
 import Footsteps from './sounds/footsteps.mp3';
 import Picked from './sounds/picked.mp3';
@@ -90,14 +92,17 @@ class Game extends React.Component {
 
   checkFor(nxtY, nxtX, entity) {
     let {presence} = this.state;
-    return presence[nxtY + 1][nxtX] === entity
-      ? {dir: 'right'}
-      : presence[nxtY][nxtX + 1] === entity
-      ? {dir: 'down'}
-      : presence[nxtY - 1][nxtX] === entity
-      ? {dir: 'left'}
-      : presence[nxtY][nxtX - 1] === entity
-      ? {dir: 'up'}
+    function giveL(x, y) {
+      return parseInt(presence[x][y][presence[x][y].length - 1]);
+    }
+    return presence[nxtY + 1][nxtX].indexOf(entity) >= 0
+      ? {dir: 'right', level: giveL(nxtY + 1, nxtX)}
+      : presence[nxtY][nxtX + 1].indexOf(entity) >= 0
+      ? {dir: 'down', level: giveL(nxtY, nxtX + 1)}
+      : presence[nxtY - 1][nxtX].indexOf(entity) >= 0
+      ? {dir: 'left', level: giveL(nxtY - 1, nxtX)}
+      : presence[nxtY][nxtX - 1].indexOf(entity) >= 0
+      ? {dir: 'up', level: giveL(nxtY, nxtX - 1)}
       : 'clear';
   }
 
@@ -110,15 +115,17 @@ class Game extends React.Component {
   updatePositions(x, y) {
     let posit = this.state.presence[x][y];
     if (typeof this.checkFor(x, y, 'thug') === 'object') {
+      let {dir, level} = this.checkFor(x, y, 'thug');
       let conditions = {
-        enemyLevel: 1,
-        enemyHp: enemy[1].hp,
-        enemyAttack: enemy[1].attack,
+        enemyDir: dir,
+        enemyLevel: level,
+        enemyHp: enemy[level].hp,
+        enemyAttack: enemy[level].attack,
       };
-      let {dir} = this.checkFor(x, y, 'thug');
       this.setState({mssg: `LOOK OUT! Enemy ${dir}`});
+      console.log(level);
       this.setState({fightOn: true});
-      this.setState({enemyDir: dir, ...conditions});
+      this.setState({...conditions});
     } else {
       this.setState({fightOn: false});
     }
@@ -189,7 +196,8 @@ class Game extends React.Component {
   }
 
   attack(x, y) {
-    this.playSound(FightBegin);
+    let wL = this.state.weaponLevel;
+    this.playSound(wL === 3 ? Fight3 : wL === 2 || 1 ? Fight2 : Fight1);
     let {
         hp,
         xp,
@@ -201,8 +209,9 @@ class Game extends React.Component {
       } = this.state,
       weaponAttack = weapon[weaponLevel][1];
     hp = hp - enemyAttack >= 0 ? hp - enemyAttack : 0;
-    enemyHp = enemyHp - weaponAttack >= 0 ? enemyHp - weaponAttack : 0;
-    xp += 5 * enemyLevel;
+    enemyHp =
+      enemyHp - weaponAttack - xp >= 0 ? enemyHp - weaponAttack - xp : 0;
+    xp = xp + 5 * enemyLevel;
     if (enemyHp === 0) {
       this.emptyPresence(x, y);
       this.setState({thugCount: thugCount - 1});
